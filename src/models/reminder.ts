@@ -21,6 +21,5 @@ const ReminderSchema = new Schema(
   { timestamps: true }
 );
 
-const Reminder = mongoose.model("Reminder", ReminderSchema);
-
-module.exports = Reminder;
+module.exports =
+  mongoose.models.Reminder || mongoose.model("Reminder", ReminderSchema);
