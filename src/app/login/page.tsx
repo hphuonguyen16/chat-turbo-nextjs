@@ -48,7 +48,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState<string>('');
     const login = async () => {
         const res = await signIn("credentials", {
-            email: username,
+            username: username,
             password: password,
         });
     };
