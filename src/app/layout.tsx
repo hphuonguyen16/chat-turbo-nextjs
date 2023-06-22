@@ -1,7 +1,14 @@
+'use client'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import ThemeProvider from "../theme";
 import * as React from "react";
+import Layout from '@/layouts';
+import { SessionProvider } from "next-auth/react";
+import { usePathname } from 'next/navigation'
+import { ProSidebarProvider } from "react-pro-sidebar";
+
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,19 +18,39 @@ export const metadata = {
 }
 
 export default function RootLayout({
-  children,
+  children, session
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
+  session: any
 }) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider>
-            <div className="container">
-              {children}
-            </div>
-        </ThemeProvider>
-      </body>
-    </html>
-  );
+  const pathname = usePathname();
+  if (pathname === '/login') {
+    return (
+      <html lang="en">
+        <body className={inter.className}>
+        <SessionProvider session={session}>
+          <ThemeProvider>
+                {children}
+          </ThemeProvider>
+      </SessionProvider>
+        </body>
+      </html>
+    );
+  } else {
+    return (
+      <html lang="en">
+        <body className={inter.className}>
+        <SessionProvider session={session}>
+          <ThemeProvider>
+          <ProSidebarProvider>
+            <Layout>
+                {children}
+            </Layout>
+            </ProSidebarProvider>
+          </ThemeProvider>
+      </SessionProvider>
+        </body>
+      </html>
+    );
+  }
 }
