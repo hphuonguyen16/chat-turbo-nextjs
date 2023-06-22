@@ -22,7 +22,5 @@ const messageRecipientSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports =
-  mongoose.models.MessageRecipient ||
-  mongoose.model("MessageRecipient", messageRecipientSchema);
+export default mongoose.models.MessageRecipient || mongoose.model("MessageRecipient", messageRecipientSchema);
 

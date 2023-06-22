@@ -18,7 +18,5 @@ const userGroupSchema = new Schema(
 
   { timestamps: true }
 );
-
-module.exports =
-  mongoose.models.UserGroup || mongoose.model("UserGroup", userGroupSchema);
+export default mongoose.models.UserGroup || mongoose.model("UserGroup", userGroupSchema);
 
