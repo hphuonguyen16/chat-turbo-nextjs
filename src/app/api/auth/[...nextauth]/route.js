@@ -5,9 +5,8 @@ import User from "@/models/user";
 import connect from "@/utils/db";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
-import { NextAuthOptions } from "next-auth";
 
-const authOptions = {
+const handler = NextAuth({
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -18,14 +17,15 @@ const authOptions = {
 
         try {
           const user = await User.findOne({
-            username: credentials?.username,
+            username: credentials.username,
           });
 
           if (user) {
             const isPasswordCorrect = await bcrypt.compare(
-              credentials?.password,
+              credentials.password,
               user.password
             );
+
             if (isPasswordCorrect) {
               return user;
             } else {
@@ -39,18 +39,19 @@ const authOptions = {
         }
       },
     }),
-    // GithubProvider({
-    //   clientId: process.env.GITHUB_ID,
-    //   clientSecret: process.env.GITHUB_SECRET,
-    // }),
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    // }),
+    GithubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
   pages: {
     signIn: "/login",
   },
-};
 
-export default NextAuth(authOptions);
+});
+
+export { handler as GET, handler as POST };
