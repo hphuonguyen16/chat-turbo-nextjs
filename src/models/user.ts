@@ -19,6 +19,7 @@ const userSchema = new Schema(
     },
     avatar: {
       type: String,
+      default: "https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
     },
     email: {
       type: String,

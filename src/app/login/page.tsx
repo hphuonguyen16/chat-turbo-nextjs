@@ -8,6 +8,8 @@ import useResponsive from '@/hooks/useResponsive';
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
+import image from '@/assets/images/login.gif';
+import Image from 'next/image';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +21,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
 
 const StyledSection = styled('div')(({ theme }) => ({
   width: '100%',
-  maxWidth: 480,
+  maxWidth: 800,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -52,25 +54,25 @@ export default function LoginPage() {
     };
   const mdUp = useResponsive('up', 'md');
   if (session) {
-    router.push('/');
+    router.push('/dashboard');
   }
   else
   return (
     <>
-        <title> Login | BTS </title>
+        <title> Login </title>
       <StyledRoot>
         {mdUp && (
           <StyledSection>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+            {/* <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hi, Welcome Back
-            </Typography>
-            <img src="https://www.unifii.co.uk/glide_assets/containers/assets/legacy/team-photos/individual/Chris-Cole-avatar.png/9b10a37d4c8d9cd3317c84ad1119bafd.png" alt="login" />
+            </Typography> */}
+            <Image src={image} alt="Picture of the author" />
           </StyledSection>
         )}
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              Sign in to BTS
+              Sign in to Chat Turbo
             </Typography>
             <Stack spacing={3}>
         <TextField name="username" label="Username" onChange={(e) => {setUsername(e.target.value)}} />
@@ -93,10 +95,9 @@ export default function LoginPage() {
                 Login
               </Button>
             <Typography variant="body2" sx={{ mb: 5 }}>
-              Register
-              <Link variant="subtitle2">Get started</Link>
+              Don’t have an account? {' '}
+              <Link variant="subtitle2" href="/register">Register Here</Link>
             </Typography>
-
           </StyledContent>
         </Container>
       </StyledRoot>

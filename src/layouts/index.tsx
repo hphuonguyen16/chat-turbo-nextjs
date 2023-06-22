@@ -44,12 +44,6 @@ const Layout = ({ children }: PropsWithChildren) => {
     <StyledRoot>
       <SideBar />
       <Main>
-        <Box sx={{ ml: "40px", mb: "20px" }}>
-          <title>Chat Turbo</title>
-          <h4 className="text-2xl mb-3 font-bold mr-5">
-            1
-          </h4>
-        </Box>
         {children}
       </Main>
     </StyledRoot>

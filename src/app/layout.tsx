@@ -1,6 +1,6 @@
 'use client'
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import ThemeProvider from "../theme";
 import * as React from "react";
 import Layout from '@/layouts';
@@ -10,7 +10,12 @@ import { ProSidebarProvider } from "react-pro-sidebar";
 
 
 
-const inter = Inter({ subsets: ['latin'] })
+const poppins = Poppins({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
 
 export const metadata = {
   title: 'Chat Turbo',
@@ -24,10 +29,10 @@ export default function RootLayout({
   session: any
 }) {
   const pathname = usePathname();
-  if (pathname === '/login') {
+  if (pathname === '/login' || pathname === '/register') {
     return (
       <html lang="en">
-        <body className={inter.className}>
+        <body className={poppins.className}>
         <SessionProvider session={session}>
           <ThemeProvider>
                 {children}
@@ -39,7 +44,7 @@ export default function RootLayout({
   } else {
     return (
       <html lang="en">
-        <body className={inter.className}>
+        <body className={poppins.className}>
         <SessionProvider session={session}>
           <ThemeProvider>
           <ProSidebarProvider>

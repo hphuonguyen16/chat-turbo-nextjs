@@ -11,9 +11,8 @@ import Link from "next/link";
 
 function App() {
   const { collapseSidebar } = useProSidebar();
-
   return (
-      <Sidebar style={{ height: "100vh" }}>
+      <Sidebar backgroundColor="white" style={{ height: "100vh" }}>
         <Menu>
           <MenuItem
             icon={<MenuOutlinedIcon />}
@@ -23,7 +22,7 @@ function App() {
             style={{ textAlign: "center" }}
           >
             {" "}
-            <h2>Admin</h2>
+            <h2 style={{color: "red"}}>Chat Turbo</h2>
           </MenuItem>
 		<Link href="/dashboard">
           <MenuItem icon={<HomeOutlinedIcon />}>Home</MenuItem>
