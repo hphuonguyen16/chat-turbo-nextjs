@@ -25,7 +25,6 @@ const handler = NextAuth({
                         );
 
                         if (isPasswordCorrect) {
-                          console.log(user);
                             return user;
                         } else {
                             throw new Error('Wrong Credentials!');

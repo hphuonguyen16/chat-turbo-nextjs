@@ -5,7 +5,13 @@ import TopMessage from '@/components/dashboard/TopMessage';
 import Reminder from '@/components/dashboard/Reminder';
 const Page = () => {
   return (
-    <div>
+    <div style={{
+      width: "100%",
+      marginLeft: "auto",
+      marginRight: "auto",
+      maxWidth: "1200px",
+      paddingTop: "50px", 
+  }}>
       <title>Dashboard</title>
       <Grid
         container
