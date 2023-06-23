@@ -4,10 +4,8 @@ import { NextResponse } from "next/server";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt"
 
-export const GET = async (req: NextApiRequest,
-  res: NextApiResponse) => {
+export const GET = async (req) => {
   const session = await getToken({ req, secret: process.env.SECRET });
-  console.log(session);
   try {
       await connect();
       const users = await User.find();

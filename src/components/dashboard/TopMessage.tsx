@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Typography, Stack, Avatar } from '@mui/material'
+import { Card, Typography, Stack, Avatar } from '@mui/material'
 const data = [
     {
         id: 1,
@@ -19,7 +19,7 @@ const data = [
 ]
 const TopMessage = () => {
     return (
-        <Box sx={{ flexGrow: 1,
+        <Card sx={{ flexGrow: 1,
             backgroundColor: "#fff",
             borderRadius: "10px",
             }} >
@@ -33,11 +33,11 @@ const TopMessage = () => {
                     {item.name}
                 </Typography>
                 <Typography variant="subtitle2" noWrap sx={{marginLeft: "auto"}}>
-                    ${item.ammount}
+                    {item.ammount} Messages
                 </Typography>
             </Stack>
             ))}
-        </Box>
+        </Card>
     )
 }
 
