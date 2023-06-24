@@ -95,8 +95,8 @@ export default function LoginPage() {
                 Login
               </Button>
             <Typography variant="body2" sx={{ mb: 5 }}>
-              Register
-              <Link variant="subtitle2">Get started</Link>
+              Don’t have an account? {' '}
+              <Link variant="subtitle2" href="/register">Register Here</Link>
             </Typography>
 
           </StyledContent>

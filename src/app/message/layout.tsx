@@ -2,7 +2,6 @@
 import { Grid } from "@mui/material";
 import Group from "../../components/chat/Group";
 import { theme } from "../../theme";
-
 export default function ChatLayout({
   children,
 }: {

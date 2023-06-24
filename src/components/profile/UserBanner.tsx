@@ -115,6 +115,32 @@ const UserBanner = () => {
       isFriend.current = true;
     }
   };
+  const unFriend = async () => {
+    const response = await fetch(`/api/friend/remove/${id.id}`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200) {
+      setMessage("Friend removed!");
+      setOpen(true);
+      isFriend.current = false;
+    }
+  };
+  const cancelRequest = async () => {
+    const response = await fetch(`/api/friend/remove/${id.id}`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200) {
+      setMessage("Friend request canceled!");
+      setOpen(true);
+      isSendRequest.current = false;
+    }
+  };
   useEffect(() => {
     getUser().then((data) => {
       setUser(data);
@@ -134,13 +160,13 @@ const UserBanner = () => {
       }
       setOpen(false);
     };
-    if (user?.waitingAcceptedFriends.includes(session?.user._doc._id)) {
+    if (user?.waitingAcceptedFriends.includes(session?.user?._doc?._id)) {
       isSendRequest.current = true;
     }
-    if (user?.waitingRequestFriends.includes(session?.user._doc._id)) {
+    if (user?.waitingRequestFriends.includes(session?.user?._doc?._id)) {
       isAcceptRequest.current = true;
     }
-    if (user?.friends.includes(session?.user._doc._id)) {
+    if (user?.friends.includes(session?.user?._doc?._id)) {
       isFriend.current = true;
     }
   return (
@@ -199,7 +225,7 @@ const UserBanner = () => {
 
             <ListItemText
               className={`${isMobile ? "m-0 text-center mt-6" : "m-auto ml-8"}`}
-              sx={{ marginTop: isMobile ? "0" : "70px" }}
+              sx={{ marginTop: isMobile ? "0" : "70px", zIndex: "999" }}
             >
               <Typography
                 sx={{
@@ -219,7 +245,9 @@ const UserBanner = () => {
               >
                 {user?.email}
               </Typography>
-              {!isMe && ( !isFriend.current && (isAcceptRequest.current ? <Button onClick={acceptRequest}>Accept Request</Button> : (isSendRequest.current ? <Button>Request Sent</Button> : <Button onClick={addFriend}>Add Friend</Button>) )) }
+              <div style={{ paddingTop: "30px"}}>
+              {!isMe && ( isFriend.current ?<Button onClick={unFriend} variant="contained">Unfriend</Button> : (isAcceptRequest.current ? <Button onClick={acceptRequest} variant="contained">Accept Request</Button> : (isSendRequest.current ? <Button variant="contained" onClick={cancelRequest}>Cancel Request</Button> : <Button  variant="contained" onClick={addFriend}>Add Friend</Button>) )) }
+              </div>
             </ListItemText>
           </Stack>
         </Box>
