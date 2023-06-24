@@ -8,15 +8,22 @@ const messageSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    recipient: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    recipientGroup: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Group",
+    },
     content: { type: String, trim: true },
     parentMessage: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
+      default: null,
     },
     hearts: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     createAt: { type: Date, default: Date.now },    
-    isReminder: { type: Boolean, default: false },
-    reminder: { type: mongoose.Schema.Types.ObjectId, ref: "Reminder" },
   },
 
   { timestamps: true }

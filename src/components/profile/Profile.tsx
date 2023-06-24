@@ -2,7 +2,8 @@ import React from 'react'
 import { Grid, Card, CardHeader, Divider, Stack, Typography } from '@mui/material'
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import MarkunreadRoundedIcon from '@mui/icons-material/MarkunreadRounded';
-const Profile = () => {
+
+const Profile = ({user}: any) => {
     return (
         <>
             <Grid
@@ -20,7 +21,7 @@ const Profile = () => {
                                     Friends
                                 </Typography>
                                 <Typography variant="h6" component="div" sx={{ textAlign: "center" }}>
-                                    200
+                                    {user?.friends.length}
                                 </Typography>
                             </Stack>
                             <Divider orientation="vertical" />
@@ -41,7 +42,7 @@ const Profile = () => {
                             }} />
                             <div style={{ display: "flex", flexDirection: "column", gap: "16px", padding: "24px"}}>
                                 <Typography variant="h6" noWrap>
-                                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt, accusantium dolore possimus commodi amet, illo praesentium quis molestiae iste odit exercitationem est sint nemo delectus, maxime eius laboriosam? Doloremque, fugit.
+                                    {user?.quote}
                                 </Typography>
                                 <div style={{display: 'flex', flexDirection: 'row', gap: "16px"}}>
                                     <RoomRoundedIcon /> <Typography variant="h6" noWrap>
