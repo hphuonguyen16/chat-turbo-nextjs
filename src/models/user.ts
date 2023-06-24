@@ -36,6 +36,7 @@ const userSchema = new Schema(
     ],
     waitingRequestFriends: [
       { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      
     ],
   },
   { timestamps: true }

@@ -8,28 +8,26 @@ declare module "next-auth" {
 	}
 
 	interface User {
-		access_token: string;
-		userInfo: {
-			id: string;
-			userName: string;
+		_doc: {
+			_id: string;
+			avatar: string;
+			username: string;
 			email: string;
 			name: string;
 			surname: string;
-			role: string[];
 		};
 	}
 }
 
 declare module "next-auth/jwt" {
 	interface JWT {
-		access_token: string;
-		userInfo: {
-			id: string;
-			userName: string;
+		_doc: {
+			_id: string;
+			avatar: string;
+			username: string;
 			email: string;
 			name: string;
 			surname: string;
-			role: string[];
 		};
 	}
 }

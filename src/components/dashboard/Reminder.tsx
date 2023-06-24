@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, Box, Stack, Typography } from '@mui/material'
+import { Avatar, Card, Stack, Typography } from '@mui/material'
 
 const data = [
     {
@@ -20,7 +20,7 @@ const data = [
 ]
 const Reminder = () => {
   return (
-    <Box sx={{ flexGrow: 1,
+    <Card sx={{ flexGrow: 1,
         backgroundColor: "#fff",
         borderRadius: "10px",
         }} >
@@ -37,7 +37,7 @@ const Reminder = () => {
             </Typography>
         </Stack>
         ))}
-    </Box>
+    </Card>
   )
 }
 
