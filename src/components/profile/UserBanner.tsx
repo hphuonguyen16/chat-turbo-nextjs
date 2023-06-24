@@ -5,14 +5,13 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
-import {Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
-import { useEffect, useState } from "react";
-import { Snackbar, Alert } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import { Snackbar, Alert, Button } from "@mui/material";
 import ContactEmergencyRoundedIcon from '@mui/icons-material/ContactEmergencyRounded';
 import useResponsive from "@/hooks/useResponsive";
 import useTranslation from "next-translate/useTranslation";
-import { usePathname } from 'next/navigation'
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import CollectionsRoundedIcon from '@mui/icons-material/CollectionsRounded';
@@ -21,6 +20,7 @@ import Profile from "./Profile";
 import Followers from "./Followers";
 import Friends from "./Friends";
 import Gallery from "./Gallery";
+import { useParams } from "next/navigation";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -28,16 +28,16 @@ interface TabPanelProps {
   value: number;
 }
 export type UserInfoProps = {
-  userName: string;
+  username: string;
   email: string;
-  emailConfirmed: boolean;
   name: string;
   surname: string | null;
-  phoneNumber: string | null;
-  phoneNumberConfirmed: boolean;
-  isExternal: boolean;
-  hasPassword: boolean;
-  extraProperties: {};
+  avatar: string;
+  cover_img: string;
+  quote: string;
+  friends: string[];
+  waitingAcceptedFriends: string[];
+  waitingRequestFriends: string[];
 };
 
 
@@ -69,24 +69,80 @@ function a11yProps(index: number) {
 }
 
 const UserBanner = () => {
-const { data: session } = useSession();
+  const { data: session } = useSession();
   const [value, setValue] = React.useState(0);
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>();
+  const [user, setUser] = useState<UserInfoProps>();
+  const isSendRequest = useRef(false);
+  const isAcceptRequest = useRef(false);
+  const isFriend = useRef(false);
+  let isMe = false;
+  const id = useParams();
+  if (session?.user._doc._id === id.id) {
+    isMe = true;
+  }
+  async function getUser() {
+    const response = await fetch(`/api/user/${id.id}`,{
+      method: "GET",
+    });
+    const data = await response.json();
+    return data;
+  }
+  const addFriend = async () => {
+    const response = await fetch(`/api/friend/add/${id.id}`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200) {
+      setMessage("Friend request sent!");
+      setOpen(true);
+      isSendRequest.current = true;
+    }
+  };
+  const acceptRequest = async () => {
+    const response = await fetch(`/api/friend/accept/${id.id}`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200) {
+      setMessage("Friend request accepted!");
+      setOpen(true);
+      isFriend.current = true;
+    }
+  };
+  useEffect(() => {
+    getUser().then((data) => {
+      setUser(data);
+    });
+  }, [id.id]);
   const isMobile = useResponsive("down", "sm");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   
-    const handleCloseSnack = (
-      event?: React.SyntheticEvent | Event,
-      reason?: string
+  const handleCloseSnack = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
     ) => {
       if (reason === "clickaway") {
         return;
       }
       setOpen(false);
     };
+    if (user?.waitingAcceptedFriends.includes(session?.user._doc._id)) {
+      isSendRequest.current = true;
+    }
+    if (user?.waitingRequestFriends.includes(session?.user._doc._id)) {
+      isAcceptRequest.current = true;
+    }
+    if (user?.friends.includes(session?.user._doc._id)) {
+      isFriend.current = true;
+    }
   return (
     <Box>
       <Snackbar
@@ -97,7 +153,7 @@ const { data: session } = useSession();
         open={open}
         autoHideDuration={3000}
         onClose={handleCloseSnack}
-      >
+        >
         <Alert severity="success" sx={{ width: "100%" }}>
           {message}
         </Alert>
@@ -109,7 +165,7 @@ const { data: session } = useSession();
           margin: "auto",
           borderRadius: "20px",
         }}
-      >
+        >
         <Box
           sx={{
             borderTopLeftRadius: 15,
@@ -124,11 +180,10 @@ const { data: session } = useSession();
           }}
         >
           <Stack
-            className={`${
-              !isMobile
+            className={`${!isMobile
                 ? "absolute left-8 top-[45%]"
                 : "w-full items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-            }`}
+              }`}
             direction={isMobile ? "column" : "row"}
           >
             <Avatar
@@ -139,12 +194,12 @@ const { data: session } = useSession();
               }}
               variant="circular"
               alt="Remy Sharp"
-              src={session?.user._doc.avatar}
+              src={user?.avatar}
             />
 
             <ListItemText
               className={`${isMobile ? "m-0 text-center mt-6" : "m-auto ml-8"}`}
-              sx={{ marginTop: isMobile ? "0" : "70px"}}
+              sx={{ marginTop: isMobile ? "0" : "70px" }}
             >
               <Typography
                 sx={{
@@ -153,7 +208,7 @@ const { data: session } = useSession();
                   fontWeight: 600,
                 }}
               >
-                {session?.user._doc.name} {session?.user._doc.surname}
+                {user?.name} {user?.surname}
               </Typography>
               <Typography
                 sx={{
@@ -162,8 +217,9 @@ const { data: session } = useSession();
                   opacity: 0.8,
                 }}
               >
-                {session?.user._doc.email}
+                {user?.email}
               </Typography>
+              {!isMe && ( !isFriend.current && (isAcceptRequest.current ? <Button onClick={acceptRequest}>Accept Request</Button> : (isSendRequest.current ? <Button>Request Sent</Button> : <Button onClick={addFriend}>Add Friend</Button>) )) }
             </ListItemText>
           </Stack>
         </Box>
@@ -216,7 +272,7 @@ const { data: session } = useSession();
                     fontSize="medium"
                     sx={{ marginRight: "8px" }}
                   />
-                Followers
+                  Followers
                 </div>
               }
               {...a11yProps(1)}
@@ -252,7 +308,7 @@ const { data: session } = useSession();
         </Box>
       </Box>
       <TabPanel value={value} index={0}>
-        <Profile />
+        <Profile user={user} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Followers />
