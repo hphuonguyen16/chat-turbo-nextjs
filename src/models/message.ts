@@ -23,7 +23,6 @@ const messageSchema = new Schema(
       default: null,
     },
     hearts: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    createAt: { type: Date, default: Date.now },    
   },
 
   { timestamps: true }

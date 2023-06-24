@@ -9,9 +9,16 @@ import {
   Chip,
   Stack,
 } from "@mui/material";
-import {theme} from "../../theme"
+import { theme } from "../../theme"
 
-const GroupCard = () => {
+interface GroupCardProps {
+  name: string;
+  latestMessage: string;
+  avatar: string;
+  time: string;
+}
+
+const GroupCard = ({name, latestMessage, avatar,time} : GroupCardProps) => {
   return (
     <ListItem
       alignItems="flex-start"
@@ -41,20 +48,18 @@ const GroupCard = () => {
           <Avatar
             alt="Remy Sharp"
             sx={{ width: 56, height: 56, marginTop: "7px" }}
-            src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+            src={avatar}
           />
         </Badge>
       </ListItemAvatar>
       <ListItem alignItems="flex-start">
         <ListItemText
           sx={{ width: "70%" }}
-          primary={<Typography variant="h6">Suneo Marinir</Typography>}
+          primary={<Typography variant="h6">{name}</Typography>}
           secondary={
             <React.Fragment>
               <Typography noWrap sx={{ marginTop: "10px", opacity: "0.5" }}>
-                I'll be in your neighborhood doing errands this Lorem ipsum
-                dolor sit amet consectetur adipisicing elit. Quisquam,
-                voluptatum.
+                {latestMessage}
               </Typography>
             </React.Fragment>
           }
@@ -70,10 +75,11 @@ const GroupCard = () => {
         >
           <Stack
             direction="column"
+            gap = "3px"
             sx={{ justifyContent: "center", alignItems: "center" }}
           >
             <Typography sx={{ fontSize: "12px", opacity: "0.7" }}>
-              11:11 AM
+              {time}
             </Typography>
             <div
               style={{

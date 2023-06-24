@@ -16,14 +16,30 @@ import {
 import ImageIcon from "@mui/icons-material/Image";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
-import React from "react";
+import React, { useEffect } from "react";
 import GroupCard from "./GroupCard";
 import AddToPhotosOutlinedIcon from "@mui/icons-material/AddToPhotosOutlined";
+import Link from "next/link";
+import { timeSince } from "../../utils/changeDate";
 import { useSession } from "next-auth/react";
 const Group = () => {
+  const [initialGroups, setInitialGroups] = React.useState([]);
   const { data: session } = useSession();
+  async function getAllGroups() {
+    const groups = await fetch("/api/group", {
+      method: "GET",
+    });
+    const data = await groups.json();
+    return data;
+  }
+
+  useEffect(() => {
+    getAllGroups().then((res) => {
+      setInitialGroups(res);
+    })
+  }, []);
   return (
-    <Box sx={{ padding:"20px 15px" }}>
+    <Box sx={{ padding: "20px 15px" }}>
       <Box sx={{ paddingBottom: "15px" }}>
         <ListItem>
           <ListItemAvatar>
@@ -183,11 +199,22 @@ const Group = () => {
           </FormControl>
           <Box sx={{ width: "100%" }}>
             <List sx={{ width: "100%" }}>
-              <GroupCard />
-              <GroupCard />
-              <GroupCard />
-              <GroupCard />
-              <GroupCard />
+              {initialGroups.map((group : any) => {
+                const friend = group?.members.filter(
+                  (member:any) => member.id !== session?.user._doc._id
+                );
+                return (
+                  <Link href={`/message/${group._id}`}>
+                  <GroupCard
+                    key={group.id}
+                    name={friend[0]?.name + " " + friend[0]?.surname}
+                    avatar={friend[0]?.avatar}
+                    latestMessage={group?.latestMessage.content}
+                    time={timeSince(new Date(group.latestMessage?.createdAt))}
+                    />
+                    </Link>
+                );
+              })}
             </List>
           </Box>
         </Box>

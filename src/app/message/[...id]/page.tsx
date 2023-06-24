@@ -26,7 +26,7 @@ import MessageCard from '@/components/chat/MessageCard';
 import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import Link from 'next/link';
+import GroupInfo from '@/components/chat/GroupInfo';
 import { useSession } from 'next-auth/react';
 
 const Page = () => {
@@ -157,45 +157,7 @@ const Page = () => {
       </Grid>
       <Divider />
       <Grid item xs={12} md={3} lg={3}>
-        <Box sx={{ padding: "40px 15px" }}>
-          <Stack
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Avatar
-              sx={{
-                width: "60px",
-                height: "60px",
-              }}
-              alt="Remy Sharp"
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
-            />
-            <Typography variant="h6">Huy Bui</Typography>
-            <Typography sx={{ opacity: "0.5", fontSize: "14px" }} variant="h6">
-              @account
-            </Typography>
-          </Stack>
-        </Box>
-        <Divider />
-        <Box>
-          <ListItem sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4">Reminders</Typography>
-            <Typography sx={{ opacity: "0.5", fontSize: "14px" }}>
-              See all
-            </Typography>
-          </ListItem>
-        </Box>
-        <Box>
-          <ListItem sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4">Shared Media</Typography>
-            <Typography sx={{ opacity: "0.5", fontSize: "14px" }}>
-              See all
-            </Typography>
-          </ListItem>
-        </Box>
+       <GroupInfo />
       </Grid>
     </Grid>
   );
