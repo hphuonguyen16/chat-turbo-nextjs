@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 246,248,252;
+  --foreground-rgb: 246, 248, 252;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
@@ -11,3 +11,47 @@
 body {
   color: rgb(var(--foreground-rgb));
 }
+.rce-mbox {
+  border-radius: 20px !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+.rce-mbox span {
+  font-size: 16px;
+  font-weight: 600;
+  color: black;
+}
+/* .rce-mbox svg {
+  display: none;
+} */
+
+.rce-mbox-text{
+    padding: 15px;
+    background: #ebf0f5;
+    border-radius: 10px;
+    margin-bottom: "2px";
+}
+
+.rce-mbox-text left{
+    padding: 15px;
+    background: #ebf0f5;
+    border-radius: 10px;
+} 
+.rce-mbox.rce-mbox-right .rce-mbox-title.rce-mbox-title--clear {
+    display: flex;
+    justify-content: flex-end;
+}
+.rce-mbox-right-notch{
+  display: none;
+}
+.rce-mbox-left-notch{
+  display: none;
+}
+.rce-mbox-text.right{
+  background: #1890FF;
+  color: white;
+}
+/* .rce-mbox-time.non-copiable{
+ position: relative;
+ top: -63px;
+} */

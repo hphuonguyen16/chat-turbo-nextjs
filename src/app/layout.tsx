@@ -11,10 +11,10 @@ import { ProSidebarProvider } from "react-pro-sidebar";
 
 
 const poppins = Poppins({
-  weight: '400',
+  weight: "400",
   subsets: ['latin'],
-  display: 'swap',
-})
+  display: "swap",
+});
 
 
 export const metadata = {
