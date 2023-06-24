@@ -21,13 +21,10 @@ const StyledRoot = styled("div")({
 
 const Main = styled("div")(({ theme }) => ({
 	flexGrow: 1,
-	overflow: "auto",
 	minHeight: "100%",
+	maxHeight: "100vh",
+	overflow: "hidden",
 	paddingBottom: theme.spacing(10),
-	[theme.breakpoints.up("lg")]: {
-		paddingLeft: theme.spacing(2),
-		paddingRight: theme.spacing(2),
-	},
 }));
 
 // ----------------------------------------------------------------------

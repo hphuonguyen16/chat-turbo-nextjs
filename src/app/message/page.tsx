@@ -1,11 +1,12 @@
-import React from 'react'
 
-const Page = () => {
+import React from 'react'
+const page = () => {
   return (
     <div>
-        <title> Message </title>
-        Page</div>
+      Chat page
+    </div>
+    
   )
 }
 
-export default Page
+export default page

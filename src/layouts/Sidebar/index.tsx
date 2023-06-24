@@ -1,3 +1,4 @@
+"use client"
 import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';

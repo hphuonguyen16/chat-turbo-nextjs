@@ -30,6 +30,7 @@ const themeOptions = {
 export const theme = createTheme(themeOptions);
 theme.components = componentsOverride(theme);
 
+
 export default function ThemeProvider({ children }: { children: ReactNode }) {
 	return (
 		<StyledEngineProvider injectFirst>
