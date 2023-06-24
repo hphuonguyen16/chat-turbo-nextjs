@@ -19,8 +19,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 import React from "react";
 import GroupCard from "./GroupCard";
 import AddToPhotosOutlinedIcon from "@mui/icons-material/AddToPhotosOutlined";
-
+import { useSession } from "next-auth/react";
 const Group = () => {
+  const { data: session } = useSession();
   return (
     <Box sx={{ padding:"20px 15px" }}>
       <Box sx={{ paddingBottom: "15px" }}>
@@ -32,15 +33,15 @@ const Group = () => {
                 height: "56px",
               }}
               alt="Remy Sharp"
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+              src={session?.user?._doc.avatar}
             />
           </ListItemAvatar>
           <ListItemText
             sx={{ marginLeft: "15px" }}
-            primary={<Typography variant="h4">Rohmad Khoir</Typography>}
+            primary={<Typography variant="h4">{session?.user._doc.name} {session?.user._doc.surname}</Typography>}
             secondary={
               <Typography sx={{ opacity: "0.5", fontSize: "14px" }}>
-                My account
+                {session?.user._doc.quote}
               </Typography>
             }
           />

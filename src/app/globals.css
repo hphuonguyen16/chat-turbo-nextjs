@@ -55,3 +55,32 @@ body {
  position: relative;
  top: -63px;
 } */
+.input-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.input-wrapper {
+  background-color: #ffffff;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 100%;
+  border-radius: 1rem;
+  color: #1890FF;
+  box-shadow: 0 0 0 0.2rem rgba(24, 144, 255, 0.25);
+  cursor: pointer;
+}
+.input-wrapper input{
+  background-color: #ffffff;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 100%;
+  border-radius: 1rem;
+  color: black;
+  cursor: pointer;
+}
+
+.input-wrapper input:focus {
+  outline-color: none;
+}

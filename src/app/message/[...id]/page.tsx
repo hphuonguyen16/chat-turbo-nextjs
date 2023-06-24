@@ -14,8 +14,8 @@ import {
   InputAdornment,
   List,
   Divider,
-    Badge,
-    Stack,
+  Badge,
+  Stack,
   AvatarGroup
 } from "@mui/material";
 import DuoOutlinedIcon from "@mui/icons-material/DuoOutlined";
@@ -23,9 +23,14 @@ import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import TextSnippetOutlinedIcon from "@mui/icons-material/TextSnippetOutlined";
 import MessageCard from '@/components/chat/MessageCard';
+import KeyboardVoiceRoundedIcon from '@mui/icons-material/KeyboardVoiceRounded';
+import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
-const page = () => {
+const Page = () => {
+  const { data: session } = useSession();
   return (
     <Grid
       container
@@ -37,8 +42,10 @@ const page = () => {
         overflowY: "auto",
       }}
     >
-      <Grid item xs={12} md={9} lg={9} sx={{borderRight: "rgba(145, 158, 171, 0.24) solid",
-    borderWidth: "1px"}}>
+      <Grid item xs={12} md={9} lg={9} sx={{
+        borderRight: "rgba(145, 158, 171, 0.24) solid",
+        borderWidth: "1px"
+      }}>
         <Box
           sx={{
             display: "flex",
@@ -104,6 +111,49 @@ const page = () => {
             type={"text"}
           />
         </Box>
+        <Box sx={{
+          position: "absolute",
+          bottom: "0",
+          padding: "15px 20px",
+          width: "50%",
+          left: "30%",
+        }}>
+          <TextField
+        id="input-with-icon-textfield"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Avatar src={session?.user?._doc.avatar} alt="avatar" sx={{width: "30px", height: "30px"}} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
+                <KeyboardVoiceRoundedIcon fontSize="small" sx={{ opacity: "0.6" }} />
+                <AttachFileRoundedIcon fontSize="small" sx={{ opacity: "0.6" }} />
+                <ImageOutlinedIcon fontSize="small" sx={{ opacity: "0.6" }} />
+                <SendRoundedIcon
+                  fontSize="small"
+                  sx={{ opacity: "0.7" }}
+                  color="primary"
+                />
+              </Stack>
+            </InputAdornment>
+          ),
+        }}
+        sx={{
+          width: "100%",
+          borderRadius: "20px",
+          background: theme.palette.background.neutral,
+          marginLeft: "15px",
+          "& fieldset": { border: "none" },
+          "& .MuiInputBase-root": {
+            height: "50px",
+          },
+        }}
+        placeholder="Type a message"
+      />
+        </Box>
       </Grid>
       <Divider />
       <Grid item xs={12} md={3} lg={3}>
@@ -151,4 +201,4 @@ const page = () => {
   );
 }
 
-export default page
+export default Page

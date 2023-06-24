@@ -8,7 +8,7 @@ import useResponsive from '@/hooks/useResponsive';
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
-import image from '@/assets/images/login.gif';
+import image from '@/assets/images/chat.gif';
 import Image from 'next/image';
 
 // ----------------------------------------------------------------------
@@ -98,6 +98,7 @@ export default function LoginPage() {
               Don’t have an account? {' '}
               <Link variant="subtitle2" href="/register">Register Here</Link>
             </Typography>
+
           </StyledContent>
         </Container>
       </StyledRoot>
