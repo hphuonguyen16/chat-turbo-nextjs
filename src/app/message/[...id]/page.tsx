@@ -23,6 +23,7 @@ import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import TextSnippetOutlinedIcon from "@mui/icons-material/TextSnippetOutlined";
 import MessageCard from '@/components/chat/MessageCard';
+import Link from 'next/link';
 
 const page = () => {
   return (
@@ -36,7 +37,8 @@ const page = () => {
         overflowY: "auto",
       }}
     >
-      <Grid item xs={12} md={9} lg={9}>
+      <Grid item xs={12} md={9} lg={9} sx={{borderRight: "rgba(145, 158, 171, 0.24) solid",
+    borderWidth: "1px"}}>
         <Box
           sx={{
             display: "flex",
@@ -103,8 +105,47 @@ const page = () => {
           />
         </Box>
       </Grid>
+      <Divider />
       <Grid item xs={12} md={3} lg={3}>
-        <div>Info chat</div>
+        <Box sx={{ padding: "40px 15px" }}>
+          <Stack
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              sx={{
+                width: "60px",
+                height: "60px",
+              }}
+              alt="Remy Sharp"
+              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+            />
+            <Typography variant="h6">Huy Bui</Typography>
+            <Typography sx={{ opacity: "0.5", fontSize: "14px" }} variant="h6">
+              @account
+            </Typography>
+          </Stack>
+        </Box>
+        <Divider />
+        <Box>
+          <ListItem sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h4">Reminders</Typography>
+            <Typography sx={{ opacity: "0.5", fontSize: "14px" }}>
+              See all
+            </Typography>
+          </ListItem>
+        </Box>
+        <Box>
+          <ListItem sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h4">Shared Media</Typography>
+            <Typography sx={{ opacity: "0.5", fontSize: "14px" }}>
+              See all
+            </Typography>
+          </ListItem>
+        </Box>
       </Grid>
     </Grid>
   );
