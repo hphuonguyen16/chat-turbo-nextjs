@@ -1,9 +1,9 @@
-import connect from '@/utils/db';
-import User from '@/models/user';
-import Group from '@/models/group';
-import Message from '@/models/message';
-import { NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import connect from "@/utils/db";
+import User from "@/models/user";
+import Group from "@/models/group";
+import Message from "@/models/message";
+import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export const POST = async (req, {params}) => {
     const session = await getToken({ req, secret: process.env.SECRET });
