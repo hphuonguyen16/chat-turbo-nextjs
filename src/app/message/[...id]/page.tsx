@@ -28,9 +28,45 @@ import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import GroupInfo from '@/components/chat/GroupInfo';
 import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRef } from 'react';
+
+export type GroupInfoProps = {
+  _id: string;
+  name: string;
+  avatar: string;
+  members: {
+    _id: string;
+    name: string;
+    surname: string;
+    avatar: string;
+    quote: string;
+  }[];
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 const Page = () => {
   const { data: session } = useSession();
+  const { id } = useParams();
+  const [groupInfo, setGroupInfo] = useState<GroupInfoProps>();
+  const isGroup = useRef(false);
+  if (groupInfo?.members?.length > 2) {
+    isGroup.current = true;
+  }
+  async function getGroupInfo() {
+    const res = await fetch(`/api/group/${id}`, {
+      method: "GET",
+    });
+    const data = await res.json();
+    return data;
+  }
+  useEffect(() => {
+    getGroupInfo().then((data) => {
+      setGroupInfo(data);
+    });
+  }, []);
   return (
     <Grid
       container
@@ -54,35 +90,40 @@ const Page = () => {
             padding: "15px 20px",
           }}
         >
-          <Typography variant="h6">Group #1</Typography>
+          <Typography variant="h6">
+            {isGroup.current ? groupInfo?.name : groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.name + " " + groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.surname}
+          </Typography>
           <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
             <DuoOutlinedIcon fontSize="small" sx={{ opacity: "0.6" }} />
             <CallOutlinedIcon fontSize="small" sx={{ opacity: "0.6" }} />
             <ImageOutlinedIcon fontSize="small" sx={{ opacity: "0.6" }} />
             <TextSnippetOutlinedIcon fontSize="small" sx={{ opacity: "0.7" }} />
           </Stack>
-          <AvatarGroup max={3}>
-            <Avatar
-              alt="Remy Sharp"
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/2.png"
-            />
-            <Avatar
-              alt="Travis Howard"
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/3.png"
-            />
-            <Avatar
-              alt="Cindy Baker"
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/4.png"
-            />
-            <Avatar
-              alt="Agnes Walker"
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/5.png"
-            />
-            <Avatar
-              alt="Trevor Henderson"
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/6.png"
-            />
-          </AvatarGroup>
+          {
+            isGroup.current && (<AvatarGroup max={3}>
+              <Avatar
+                alt="Remy Sharp"
+                src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/2.png"
+              />
+              <Avatar
+                alt="Travis Howard"
+                src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/3.png"
+              />
+              <Avatar
+                alt="Cindy Baker"
+                src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/4.png"
+              />
+              <Avatar
+                alt="Agnes Walker"
+                src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/5.png"
+              />
+              <Avatar
+                alt="Trevor Henderson"
+                src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/6.png"
+              />
+            </AvatarGroup>)
+          }
+
         </Box>
         <Divider />
         <Box>
@@ -119,45 +160,45 @@ const Page = () => {
           left: "30%",
         }}>
           <TextField
-        id="input-with-icon-textfield"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Avatar src={session?.user?._doc.avatar} alt="avatar" sx={{width: "30px", height: "30px"}} />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
-                <KeyboardVoiceRoundedIcon fontSize="small" sx={{ opacity: "0.6" }} />
-                <AttachFileRoundedIcon fontSize="small" sx={{ opacity: "0.6" }} />
-                <ImageOutlinedIcon fontSize="small" sx={{ opacity: "0.6" }} />
-                <SendRoundedIcon
-                  fontSize="small"
-                  sx={{ opacity: "0.7" }}
-                  color="primary"
-                />
-              </Stack>
-            </InputAdornment>
-          ),
-        }}
-        sx={{
-          width: "100%",
-          borderRadius: "20px",
-          background: theme.palette.background.neutral,
-          marginLeft: "15px",
-          "& fieldset": { border: "none" },
-          "& .MuiInputBase-root": {
-            height: "50px",
-          },
-        }}
-        placeholder="Type a message"
-      />
+            id="input-with-icon-textfield"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Avatar src={session?.user?._doc.avatar} alt="avatar" sx={{ width: "30px", height: "30px" }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
+                    <KeyboardVoiceRoundedIcon fontSize="small" sx={{ opacity: "0.6" }} />
+                    <AttachFileRoundedIcon fontSize="small" sx={{ opacity: "0.6" }} />
+                    <ImageOutlinedIcon fontSize="small" sx={{ opacity: "0.6" }} />
+                    <SendRoundedIcon
+                      fontSize="small"
+                      sx={{ opacity: "0.7" }}
+                      color="primary"
+                    />
+                  </Stack>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              width: "100%",
+              borderRadius: "20px",
+              background: theme.palette.background.neutral,
+              marginLeft: "15px",
+              "& fieldset": { border: "none" },
+              "& .MuiInputBase-root": {
+                height: "50px",
+              },
+            }}
+            placeholder="Type a message"
+          />
         </Box>
       </Grid>
       <Divider />
       <Grid item xs={12} md={3} lg={3}>
-       <GroupInfo />
+        <GroupInfo groupInfo={groupInfo} isGroup={isGroup.current} />
       </Grid>
     </Grid>
   );
