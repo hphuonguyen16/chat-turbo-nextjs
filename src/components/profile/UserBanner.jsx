@@ -21,6 +21,7 @@ import Followers from "./Followers";
 import Friends from "./Friends";
 import Gallery from "./Gallery";
 import { useParams } from "next/navigation";
+import UpdateProfile from "./UpdateProfile";
 
 
 
@@ -56,8 +57,8 @@ const UserBanner = () => {
   const { data: session } = useSession();
   const [value, setValue] = React.useState(0);
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("")
-  const [user, setUser] = useState()
+  const [message, setMessage] = useState("");
+  const [user, setUser] = useState();
   const isSendRequest = useRef(false);
   const isAcceptRequest = useRef(false);
   const isFriend = useRef(false);
@@ -66,15 +67,25 @@ const UserBanner = () => {
   if (session?.user._doc._id === id.id) {
     isMe = true;
   }
+
+  const handleOk = () => {
+    setOpen(true);
+    //TRANSLATE
+    setMessage(t("profile:remarkUserInfo"));
+  };
+  const handleGetImage = () => {
+   console.log("get image")
+  };
+
   async function getUser() {
-    const response = await fetch(`/api/user/${id.id}`,{
+    const response = await fetch(`/api/user/${id.id}`, {
       method: "GET",
     });
     const data = await response.json();
     return data;
   }
   const addFriend = async () => {
-    const response = await fetch(`/api/friend/add/${id.id}`,{
+    const response = await fetch(`/api/friend/add/${id.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +98,7 @@ const UserBanner = () => {
     }
   };
   const acceptRequest = async () => {
-    const response = await fetch(`/api/friend/accept/${id.id}`,{
+    const response = await fetch(`/api/friend/accept/${id.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +111,7 @@ const UserBanner = () => {
     }
   };
   const unFriend = async () => {
-    const response = await fetch(`/api/friend/remove/${id.id}`,{
+    const response = await fetch(`/api/friend/remove/${id.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -113,7 +124,7 @@ const UserBanner = () => {
     }
   };
   const cancelRequest = async () => {
-    const response = await fetch(`/api/friend/remove/${id.id}`,{
+    const response = await fetch(`/api/friend/remove/${id.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -134,25 +145,22 @@ const UserBanner = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
-  const handleCloseSnack = (
-    event,
-    reason
-    ) => {
-      if (reason === "clickaway") {
-        return;
-      }
-      setOpen(false);
-    };
-    if (user?.waitingAcceptedFriends.includes(session?.user?._doc?._id)) {
-      isSendRequest.current = true;
+
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
     }
-    if (user?.waitingRequestFriends.includes(session?.user?._doc?._id)) {
-      isAcceptRequest.current = true;
-    }
-    if (user?.friends.includes(session?.user?._doc?._id)) {
-      isFriend.current = true;
-    }
+    setOpen(false);
+  };
+  if (user?.waitingAcceptedFriends.includes(session?.user?._doc?._id)) {
+    isSendRequest.current = true;
+  }
+  if (user?.waitingRequestFriends.includes(session?.user?._doc?._id)) {
+    isAcceptRequest.current = true;
+  }
+  if (user?.friends.includes(session?.user?._doc?._id)) {
+    isFriend.current = true;
+  }
   return (
     <Box>
       <Snackbar
@@ -163,7 +171,7 @@ const UserBanner = () => {
         open={open}
         autoHideDuration={3000}
         onClose={handleCloseSnack}
-        >
+      >
         <Alert severity="success" sx={{ width: "100%" }}>
           {message}
         </Alert>
@@ -175,7 +183,7 @@ const UserBanner = () => {
           margin: "auto",
           borderRadius: "20px",
         }}
-        >
+      >
         <Box
           sx={{
             borderTopLeftRadius: 15,
@@ -190,10 +198,11 @@ const UserBanner = () => {
           }}
         >
           <Stack
-            className={`${!isMobile
+            className={`${
+              !isMobile
                 ? "absolute left-8 top-[45%]"
                 : "w-full items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-              }`}
+            }`}
             direction={isMobile ? "column" : "row"}
           >
             <Avatar
@@ -229,8 +238,25 @@ const UserBanner = () => {
               >
                 {user?.email}
               </Typography>
-              <div style={{ paddingTop: "30px"}}>
-              {!isMe && ( isFriend.current ?<Button onClick={unFriend} variant="contained">Unfriend</Button> : (isAcceptRequest.current ? <Button onClick={acceptRequest} variant="contained">Accept Request</Button> : (isSendRequest.current ? <Button variant="contained" onClick={cancelRequest}>Cancel Request</Button> : <Button  variant="contained" onClick={addFriend}>Add Friend</Button>) )) }
+              <div style={{ paddingTop: "30px" }}>
+                {!isMe &&
+                  (isFriend.current ? (
+                    <Button onClick={unFriend} variant="contained">
+                      Unfriend
+                    </Button>
+                  ) : isAcceptRequest.current ? (
+                    <Button onClick={acceptRequest} variant="contained">
+                      Accept Request
+                    </Button>
+                  ) : isSendRequest.current ? (
+                    <Button variant="contained" onClick={cancelRequest}>
+                      Cancel Request
+                    </Button>
+                  ) : (
+                    <Button variant="contained" onClick={addFriend}>
+                      Add Friend
+                    </Button>
+                  ))}
               </div>
             </ListItemText>
           </Stack>
@@ -271,7 +297,7 @@ const UserBanner = () => {
               label={
                 <div>
                   <ContactEmergencyRoundedIcon sx={{ marginRight: "8px" }} />
-                  Profile
+                  Posts
                 </div>
               }
               {...a11yProps(0)}
@@ -284,7 +310,7 @@ const UserBanner = () => {
                     fontSize="medium"
                     sx={{ marginRight: "8px" }}
                   />
-                  Followers
+                  Profile
                 </div>
               }
               {...a11yProps(1)}
@@ -323,7 +349,7 @@ const UserBanner = () => {
         <Profile user={user} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Followers />
+        <UpdateProfile userInfo={user} handleOk={handleOk} handleGetImage={handleGetImage} profileImage={""} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Friends />
