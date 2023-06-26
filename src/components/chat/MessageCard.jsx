@@ -22,8 +22,6 @@ const MessageCard = ({
   if (seenBy?.length > 0) {
     seenBy = seenBy.filter((id) => id !== session.user._doc._id);
   }
-  console.log(session.user._doc._id)
-  console.log(seenBy);
   return (
     <Box>
       {position === "left" ? (
