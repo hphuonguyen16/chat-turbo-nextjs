@@ -13,7 +13,12 @@ import AttachFileRoundedIcon from "@mui/icons-material/AttachFileRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import { theme } from "../../theme"
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
+import { pusherClient } from '@/libs/pusher';
+import message from '@/models/message';
+import {find} from 'lodash'
+import { AnyCnameRecord } from 'dns';
+
 
 
 interface GroupBodyProps {
@@ -22,8 +27,8 @@ interface GroupBodyProps {
 
 const GroupBody = ({ id }: GroupBodyProps) => {
     const { data: session } = useSession();
-    const [initialMessages, setInitialMessages] = React.useState([])
-    const messageRef = useRef("")
+  const [initialMessages, setInitialMessages] = React.useState([]);
+    const [message, setMessage] = React.useState("");
     async function getAllMessages() {
         const messages = await fetch(`/api/group/message/${id}`, {
             method: "GET",
@@ -31,18 +36,36 @@ const GroupBody = ({ id }: GroupBodyProps) => {
         const data = await messages.json();
         return data;
     }
-    React.useEffect(() => {
+    useEffect(() => {
         getAllMessages().then((res) => {
             setInitialMessages(res);
         })
     }, []);
+  useEffect(() => {
+    pusherClient.subscribe(id);
+    const messageHandler = (message: any) => { 
+       setInitialMessages((current : any) => {
+         if (find(current, { _id: message._id })) {
+           return current;
+         }
+         return [...current, message];
+       });
+    }
+    pusherClient.bind("messages:new", messageHandler);
+    return () => {
+      pusherClient.unsubscribe(id);
+      pusherClient.unbind("messages:new", messageHandler);
+    }
+  },[id])
+  
     const sendMessage = async () => {
         await fetch(`/api/message`, {
             method: "POST",
-            body: JSON.stringify({
+          body: JSON.stringify({
+                sender: session?.user._doc._id,
                 recipient: null,
                 recipientGroup: id,
-                content: messageRef.current,
+                content: message,
                 parentMessage: null,
                 hearts: null,
             }),
@@ -50,10 +73,13 @@ const GroupBody = ({ id }: GroupBodyProps) => {
                 "Content-Type": "application/json",
             },
         });
-    };
+  };
+  
+  console.log(initialMessages)
 
   return (
     <>
+      <Box>
       {initialMessages.map((message: any) => (
         <MessageCard
           avatar={
@@ -74,6 +100,7 @@ const GroupBody = ({ id }: GroupBodyProps) => {
           type="text"
         />
       ))}
+        </Box>
       <Box
         sx={{
           position: "absolute",
@@ -127,17 +154,19 @@ const GroupBody = ({ id }: GroupBodyProps) => {
             },
           }}
                   placeholder="Type a message"
-                  defaultValue={messageRef.current}
+                  value={message}
                   onKeyDown={
                       (e) => {
                             if (e.key === "Enter") {
                                 sendMessage()
-                                messageRef.current = ""
+                                //reset value in input
+                                setMessage("")
+                              
                             }
                         }
                   }
                   onChange={(e) => {
-                      messageRef.current = e.target.value
+                    setMessage(e.target.value);
                   }
                     }
         />

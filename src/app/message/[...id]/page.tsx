@@ -20,6 +20,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import GroupBody from "@/components/chat/GroupBody";
+import AvatarOnline from "@/components/chat/AvatarOnline";
 
 export type GroupInfoProps = {
   _id: string;
@@ -81,12 +82,15 @@ const Page = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: "15px 20px",
+            padding: "25px 20px",
           }}
         >
-          <Typography variant="h6">
+          <Stack direction={"row"} sx={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+            <AvatarOnline isOnline={true} avatar={""} />
+          <Typography variant="h6" sx={{paddingLeft:"20px"}}>
             {isGroup.current ? groupInfo?.name : groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.name + " " + groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.surname}
-          </Typography>
+            </Typography>
+            </Stack>
           <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
             <DuoOutlinedIcon fontSize="small" sx={{ opacity: "0.6" }} />
             <CallOutlinedIcon fontSize="small" sx={{ opacity: "0.6" }} />
@@ -120,7 +124,7 @@ const Page = () => {
 
         </Box>
         <Divider />
-        <Box>
+        <Box sx={{maxHeight:"100vh", overflow:"auto"}}>
           <GroupBody id={id} />
         </Box>
       </Grid>
