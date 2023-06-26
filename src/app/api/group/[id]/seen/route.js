@@ -28,9 +28,11 @@ export const POST = async (req, { params }) => {
     .lean();
 
   // Update group
-  group.latestMessage = updatedMessage;
-  console.log("group", group);
-  await pusherServer.trigger(session.sub, "group:update", group);
+  const newgroup = await Group.findByIdAndUpdate(params.id, {
+    latestMessage: updatedMessage,
+  }).populate("members", { name: 1, surname: 1, avatar: 1 })
+  .populate("latestMessage");
+  await pusherServer.trigger(session.sub, "group:update", newgroup);
 
   // Update last message seen
   await pusherServer.trigger(params.id, "messages:update", updatedMessage);
