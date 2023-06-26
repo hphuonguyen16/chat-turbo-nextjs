@@ -207,6 +207,7 @@ const Group = () => {
                       }
                       seenBy= {group.latestMessage?.seenBy}
                       time={timeSince(new Date(group.latestMessage?.createdAt))}
+                      sender= {group.latestMessage?.sender}
                     />
                   </Link>
                 );

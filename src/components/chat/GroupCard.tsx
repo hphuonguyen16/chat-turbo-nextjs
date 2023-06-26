@@ -21,25 +21,28 @@ interface GroupCardProps {
   time: string;
   url: string;
   seenBy: any;
+  sender: any;
 }
 
-const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url }: GroupCardProps) => {
+const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url, sender }: GroupCardProps) => {
   const [isActive, setIsActive] = React.useState(false);
-  const [isSeenBy, setIsSeenBy] = React.useState(false);
+  const isSeenBy = useRef(false);
   const {data: session} = useSession()
   const pathname = usePathname();
   useEffect(() => {
-    if (seenBy?.length > 0) {
-      seenBy = seenBy.filter((id: any) => id !== session?.user._doc._id);
+  if (seenBy?.length > 0) {
+    seenBy = seenBy.filter((id: any) => (id !== session?.user._doc._id ) || (id !== sender));
   }
   if (seenBy?.length > 0) {
-    setIsSeenBy(true);
+    isSeenBy.current = true;  
   }
   else if (seenBy?.length === 0) {
-    setIsSeenBy(false);
-    }
-  }, [seenBy, session?.user._doc._id]);
-
+    isSeenBy.current = false;
+  }
+  return () => {
+    seenBy = [];
+  };
+  }, [seenBy, session?.user._doc._id, sender]);
   useEffect(() => {
     if (pathname === url) {
       setIsActive(true);
@@ -89,7 +92,10 @@ const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url }: GroupCardP
             <React.Fragment>
               <Typography noWrap 
         
-              sx={{ marginTop: "10px", opacity: "0.5", color: !isSeenBy ? "red" : ""}}>
+              sx={{ marginTop: "10px", opacity: "0.5", color: !isSeenBy.current ? "black" : "",
+              fontWeight: !isSeenBy.current ? "bold" : "",
+
+}}>
                 {latestMessage}
               </Typography>
             </React.Fragment>
@@ -113,7 +119,7 @@ const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url }: GroupCardP
             <Typography sx={{ fontSize: "12px", opacity: "0.7" }}>
               {time}
             </Typography>
-            <div
+            { !isSeenBy.current ? (<div
               style={{
                 width: "5px",
                 height: "5px",
@@ -127,6 +133,10 @@ const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url }: GroupCardP
               }}
             >
             </div>
+            )
+            : null
+              }
+            
           </Stack>
         </ListItem>
       </ListItem>
