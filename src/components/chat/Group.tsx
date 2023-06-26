@@ -200,7 +200,7 @@ const Group = () => {
                   (member: any) => member._id !== session?.user._doc._id
                 );
                 return (
-                  <Link href={`/message/${group._id}`}>
+                  <Link href={`/message/${group._id}`} key={group._id}>
                     <GroupCard
                       key={group.id}
                       url={`/message/${group._id}`}
@@ -211,6 +211,7 @@ const Group = () => {
                           ? "You: " + group.latestMessage?.content
                           :group.latestMessage?.content
                       }
+                      seenBy= {group.latestMessage?.seenBy}
                       time={timeSince(new Date(group.latestMessage?.createdAt))}
                     />
                   </Link>
