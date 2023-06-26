@@ -39,7 +39,6 @@ export const POST = async (req) => {
     .lean();
   await pusherServer.trigger(recipientGroup, "messages:new", newMessage);
   groupUpdate.members.map((member) => {
-    console.log(groupUpdate)
     const id = member._id.toString();
     pusherServer.trigger(id, "group:update", groupUpdate);
   });

@@ -43,7 +43,6 @@ const Group = () => {
    }, [session?.user._doc._id]);
   
   useEffect(() => {
-    console.log(pusherKey);
     if (!pusherKey) return;
      pusherClient.subscribe(pusherKey);
     const updateHandler = (conversation: any) => {
@@ -69,7 +68,6 @@ const Group = () => {
     }
   }, [pusherKey]);
 
-  console.log(initialGroups);
   
 
   useEffect(() => {

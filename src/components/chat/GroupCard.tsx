@@ -24,13 +24,23 @@ interface GroupCardProps {
 }
 
 const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url }: GroupCardProps) => {
-  const isSeen = useRef(false)
   const [isActive, setIsActive] = React.useState(false);
+  const [isSeenBy, setIsSeenBy] = React.useState(false);
+  const {data: session} = useSession()
   const pathname = usePathname();
-  const { data: session } = useSession();
-  if ( seenBy?.length > 0 ) {
-    isSeen.current = true
+  console.log(seenBy)
+  useEffect(() => {
+    if (seenBy?.length > 0) {
+      seenBy = seenBy.filter((id: any) => id !== session?.user._doc._id);
   }
+  if (seenBy?.length > 0) {
+    setIsSeenBy(true);
+  }
+  else if (seenBy?.length === 0) {
+    setIsSeenBy(false);
+    }
+  }, [seenBy, session?.user._doc._id]);
+
   useEffect(() => {
     if (pathname === url) {
       setIsActive(true);
@@ -80,7 +90,7 @@ const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url }: GroupCardP
             <React.Fragment>
               <Typography noWrap 
         
-              sx={{ marginTop: "10px", opacity: "0.5", color: !isSeen.current ? "red" : ""}}>
+              sx={{ marginTop: "10px", opacity: "0.5", color: !isSeenBy ? "red" : ""}}>
                 {latestMessage}
               </Typography>
             </React.Fragment>

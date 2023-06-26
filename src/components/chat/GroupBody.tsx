@@ -52,17 +52,33 @@ const GroupBody = ({ id }: GroupBodyProps) => {
   useEffect(() => {
     pusherClient.subscribe(id);
     const messageHandler = (message: any) => {
+      seenMessages();
       setInitialMessages((current: any) => {
         if (find(current, { _id: message._id })) {
           return current;
         }
         return [...current, message];
       });
-    }
+    };
+    const updatedMessageHandler = (newMessage: any) => {
+      setInitialMessages((current : any) =>
+        current.map((currentMessage:any) => {
+          if (currentMessage._id === newMessage._id) {
+            return newMessage;
+          }
+          return currentMessage;
+        })
+      );
+    };
     pusherClient.bind("messages:new", messageHandler);
+    pusherClient.bind("messages:update", updatedMessageHandler);
+
     return () => {
       pusherClient.unsubscribe(id);
       pusherClient.unbind("messages:new", messageHandler);
+      pusherClient.unbind("messages:update", updatedMessageHandler);
+
+
     }
   }, [id])
 
