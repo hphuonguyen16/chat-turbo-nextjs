@@ -23,6 +23,7 @@ const messageSchema = new Schema(
       default: null,
     },
     hearts: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    seenBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
 
   { timestamps: true }

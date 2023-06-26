@@ -11,19 +11,25 @@ import {
   InputAdornment,
   List,
   Divider,
-  Badge
+  Badge,
+  Button,
 } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import GroupCard from "./GroupCard";
 import AddToPhotosOutlinedIcon from "@mui/icons-material/AddToPhotosOutlined";
 import Link from "next/link";
 import { timeSince } from "../../utils/changeDate";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { pusherClient } from "@/libs/pusher";
+import AvatarOnline from "./AvatarOnline";
+
 const Group = () => {
   const [initialGroups, setInitialGroups] = React.useState([]);
+  const router = useRouter();
   const { data: session } = useSession();
   async function getAllGroups() {
     const groups = await fetch("/api/group", {
@@ -32,6 +38,39 @@ const Group = () => {
     const data = await groups.json();
     return data;
   }
+   const pusherKey = useMemo(() => {
+     return session?.user._doc._id;
+   }, [session?.user._doc._id]);
+  
+  useEffect(() => {
+    console.log(pusherKey);
+    if (!pusherKey) return;
+     pusherClient.subscribe(pusherKey);
+    const updateHandler = (conversation: any) => {
+      setInitialGroups((current: any) => {
+        const index = current.findIndex(
+          (group: any) => group._id === conversation._id
+        );
+        if (index === -1) {
+          return current;
+        }
+        //remove the group by index
+        const newGroups = current.filter(
+          (group: any) => group._id !== conversation._id
+        );
+        return [conversation, ...newGroups];
+      });
+      
+     };
+    pusherClient.bind("group:update", updateHandler);
+    return () => {
+      pusherClient.unsubscribe(pusherKey);
+      pusherClient.unbind("group:update", updateHandler);
+    }
+  }, [pusherKey]);
+
+  console.log(initialGroups);
+  
 
   useEffect(() => {
     getAllGroups().then((res) => {
@@ -39,7 +78,7 @@ const Group = () => {
     })
   }, []);
   return (
-    <Box sx={{ padding: "20px 15px" }}>
+    <Box sx={{ padding: "35px 15px 50px 15px" }}>
       <Box sx={{ paddingBottom: "15px" }}>
         <ListItem>
           <ListItemAvatar>
@@ -54,7 +93,11 @@ const Group = () => {
           </ListItemAvatar>
           <ListItemText
             sx={{ marginLeft: "15px" }}
-            primary={<Typography variant="h4">{session?.user._doc.name} {session?.user._doc.surname}</Typography>}
+            primary={
+              <Typography variant="h4">
+                {session?.user._doc.name} {session?.user._doc.surname}
+              </Typography>
+            }
             secondary={
               <Typography sx={{ opacity: "0.5", fontSize: "14px" }}>
                 {session?.user._doc.quote}
@@ -74,86 +117,36 @@ const Group = () => {
             "::-webkit-scrollbar": { display: "none" },
           }}
         >
-          <Badge
-            color="success"
-            overlap="circular"
-            badgeContent=" "
-            variant="dot"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <Avatar
-              alt="Remy Sharp"
-              sx={{ width: 56, height: 56, marginTop: "7px" }}
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
-            />
-          </Badge>
-          <Badge
-            color="success"
-            overlap="circular"
-            badgeContent=" "
-            variant="dot"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <Avatar
-              alt="Remy Sharp"
-              sx={{ width: 56, height: 56, marginTop: "7px" }}
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
-            />
-          </Badge>
-          <Badge
-            color="success"
-            overlap="circular"
-            badgeContent=" "
-            variant="dot"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <Avatar
-              alt="Remy Sharp"
-              sx={{ width: 56, height: 56, marginTop: "7px" }}
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
-            />
-          </Badge>
-          <Badge
-            color="success"
-            overlap="circular"
-            badgeContent=" "
-            variant="dot"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <Avatar
-              alt="Remy Sharp"
-              sx={{ width: 56, height: 56, marginTop: "7px" }}
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
-            />
-          </Badge>
-          <Badge
-            color="success"
-            overlap="circular"
-            badgeContent=" "
-            variant="dot"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <Avatar
-              alt="Remy Sharp"
-              sx={{ width: 56, height: 56, marginTop: "7px" }}
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
-            />
-          </Badge>
+          <AvatarOnline
+            isOnline={true}
+            avatar={
+              "https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+            }
+          />
+          <AvatarOnline
+            isOnline={true}
+            avatar={
+              "https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+            }
+          />
+          <AvatarOnline
+            isOnline={true}
+            avatar={
+              "https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+            }
+          />
+          <AvatarOnline
+            isOnline={true}
+            avatar={
+              "https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+            }
+          />
+          <AvatarOnline
+            isOnline={true}
+            avatar={
+              "https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+            }
+          />
         </ListItem>
       </Box>
       <Box>
@@ -167,13 +160,15 @@ const Group = () => {
           }}
         >
           <Typography variant="h4"> Messages</Typography>
-          <AddToPhotosOutlinedIcon
-            fontSize="medium"
-            sx={{ opacity: "0.5", marginRight: "15px" }}
-          />
+          <Button>
+            <AddToPhotosOutlinedIcon
+              fontSize="medium"
+              sx={{ opacity: "0.5", marginRight: "15px" }}
+            />
+          </Button>
         </Box>
         <Box>
-          <FormControl sx={{ width: "100%" }}>
+          <FormControl sx={{ width: "90%" }}>
             <TextField
               size="small"
               variant="outlined"
@@ -186,6 +181,7 @@ const Group = () => {
                 },
                 background: "white",
                 borderRadius: "10px",
+                marginBottom: "15px",
               }}
               //   onChange={handleChange}
               InputProps={{
@@ -199,20 +195,25 @@ const Group = () => {
           </FormControl>
           <Box sx={{ width: "100%" }}>
             <List sx={{ width: "100%" }}>
-              {initialGroups.map((group : any) => {
+              {initialGroups.map((group: any) => {
                 const friend = group?.members.filter(
-                  (member:any) => member.id !== session?.user._doc._id
+                  (member: any) => member._id !== session?.user._doc._id
                 );
                 return (
                   <Link href={`/message/${group._id}`}>
-                  <GroupCard
-                    key={group.id}
-                    name={friend[0]?.name + " " + friend[0]?.surname}
-                    avatar={friend[0]?.avatar}
-                    latestMessage={group?.latestMessage.content}
-                    time={timeSince(new Date(group.latestMessage?.createdAt))}
+                    <GroupCard
+                      key={group.id}
+                      url={`/message/${group._id}`}
+                      name={friend[0]?.name + " " + friend[0]?.surname}
+                      avatar={friend[0]?.avatar}
+                      latestMessage={
+                        group.latestMessage?.sender === session?.user._doc._id
+                          ? "You: " + group.latestMessage?.content
+                          :group.latestMessage?.content
+                      }
+                      time={timeSince(new Date(group.latestMessage?.createdAt))}
                     />
-                    </Link>
+                  </Link>
                 );
               })}
             </List>

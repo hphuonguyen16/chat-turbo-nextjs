@@ -10,15 +10,33 @@ import {
   Stack,
 } from "@mui/material";
 import { theme } from "../../theme"
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import {useSession} from "next-auth/react";
 
 interface GroupCardProps {
   name: string;
   latestMessage: string;
   avatar: string;
   time: string;
+  url: string;
 }
 
-const GroupCard = ({name, latestMessage, avatar,time} : GroupCardProps) => {
+const GroupCard = ({ name, latestMessage, avatar, time, url }: GroupCardProps) => {
+  const [isActive, setIsActive] = React.useState(false);
+  const pathname = usePathname();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (pathname === url) {
+      setIsActive(true);
+      // dispatch({ type: MENU_OPEN, id: item.id });
+    } else {
+      setIsActive(false);
+    }
+    // eslint-disable-next-line
+  }, [pathname]);
+  
   return (
     <ListItem
       alignItems="flex-start"
@@ -29,10 +47,8 @@ const GroupCard = ({name, latestMessage, avatar,time} : GroupCardProps) => {
           background: theme.palette.background.paper,
           transition: "0.3s ease-in-out",
         },
-        "&:active": {
-          background: theme.palette.background.paper,
-        },
       }}
+      selected={isActive}
     >
       <ListItemAvatar>
         <Badge
@@ -58,7 +74,7 @@ const GroupCard = ({name, latestMessage, avatar,time} : GroupCardProps) => {
           primary={<Typography variant="h6">{name}</Typography>}
           secondary={
             <React.Fragment>
-              <Typography noWrap sx={{ marginTop: "10px", opacity: "0.5" }}>
+              <Typography noWrap sx={{ marginTop: "10px", opacity: "0.5"}}>
                 {latestMessage}
               </Typography>
             </React.Fragment>
@@ -68,6 +84,7 @@ const GroupCard = ({name, latestMessage, avatar,time} : GroupCardProps) => {
           sx={{
             paddingTop: "10px",
             marginLeft: "auto",
+            paddingLeft: "0px",
             justifyContent: "flex-end",
             width: "30%",
             marginRight: "15px",
@@ -75,7 +92,7 @@ const GroupCard = ({name, latestMessage, avatar,time} : GroupCardProps) => {
         >
           <Stack
             direction="column"
-            gap = "3px"
+            gap="3px"
             sx={{ justifyContent: "center", alignItems: "center" }}
           >
             <Typography sx={{ fontSize: "12px", opacity: "0.7" }}>

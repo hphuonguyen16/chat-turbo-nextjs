@@ -3,6 +3,7 @@ import Group from "@/models/group";
 import Message from "@/models/message";
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { pusherServer } from "@/libs/pusher";
 
 export const GET = async (req) => {
   await connect();
