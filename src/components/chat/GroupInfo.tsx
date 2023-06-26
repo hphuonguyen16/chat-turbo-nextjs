@@ -56,13 +56,13 @@ const GroupInfo = ({ groupInfo, isGroup }: {
                     height: "60px",
                   }}
                   alt="Remy Sharp"
-                  src={groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.avatar}
+                  src={groupInfo?.members?.filter((member) => member._id !== session?.user?._doc._id)[0]?.avatar}
                 />
                 <Typography variant="h6">
-                  {groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.name + " " + groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.surname}
+                  {groupInfo?.members?.filter((member) => member._id !== session?.user?._doc._id)[0]?.name + " " + groupInfo?.members?.filter((member) => member._id !== session?.user?._doc._id)[0]?.surname}
                 </Typography>
                 <Typography sx={{ opacity: "0.5", fontSize: "14px" }} variant="h6">
-                  {groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.quote}
+                  {groupInfo?.members?.filter((member) => member._id !== session?.user?._doc._id)[0]?.quote}
                 </Typography>
               </>
             )

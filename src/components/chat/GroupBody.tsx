@@ -79,9 +79,16 @@ const GroupBody = ({ id }: GroupBodyProps) => {
 
   return (
     <>
-      <Box>
+      <Box 
+      sx={{
+        height: "80vh",
+      overflowY: "auto",
+      overflowX: "hidden"
+      }}
+      >
       {initialMessages.map((message: any) => (
         <MessageCard
+          key={message._id}
           avatar={
             message.sender._id === session?.user._doc._id
               ? ""
@@ -103,11 +110,8 @@ const GroupBody = ({ id }: GroupBodyProps) => {
         </Box>
       <Box
         sx={{
-          position: "absolute",
           bottom: "0",
           padding: "15px 20px",
-          width: "50%",
-          left: "30%",
         }}
       >
         <TextField
@@ -147,7 +151,6 @@ const GroupBody = ({ id }: GroupBodyProps) => {
             width: "100%",
             borderRadius: "20px",
             background: theme.palette.background.neutral,
-            marginLeft: "15px",
             "& fieldset": { border: "none" },
             "& .MuiInputBase-root": {
               height: "50px",

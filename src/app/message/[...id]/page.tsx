@@ -64,7 +64,7 @@ const Page = () => {
         height: "100vh",
         maxHeight: "100vh",
         overflowX: "hidden",
-        overflowY: "auto",
+        overflowY: "hidden",
       }}
     >
       <Grid
@@ -86,9 +86,11 @@ const Page = () => {
           }}
         >
           <Stack direction={"row"} sx={{display:"flex", justifyContent:"center", alignItems:"center"}}>
-            <AvatarOnline isOnline={true} avatar={""} />
+            <AvatarOnline isOnline={true} avatar={
+              isGroup.current ? groupInfo?.avatar : groupInfo?.members?.filter((member) => member._id !== session?.user?._doc._id)[0]?.avatar
+            } />
           <Typography variant="h6" sx={{paddingLeft:"20px"}}>
-            {isGroup.current ? groupInfo?.name : groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.name + " " + groupInfo?.members?.filter((member) => member._id !== session?.user?._id)[0]?.surname}
+            {isGroup.current ? groupInfo?.name : groupInfo?.members?.filter((member) => member._id !== session?.user?._doc._id)[0]?.name + " " + groupInfo?.members?.filter((member) => member._id !== session?.user?._doc._id)[0]?.surname}
             </Typography>
             </Stack>
           <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
