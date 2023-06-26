@@ -112,6 +112,7 @@ const GroupBody = ({ id }: GroupBodyProps) => {
             text={message.content}
             date={new Date(message.createdAt).toLocaleString()}
             type="text"
+            seenBy={message.seenBy}
           />
         ))}
       </Box>
