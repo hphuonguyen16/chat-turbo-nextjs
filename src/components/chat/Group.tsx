@@ -59,7 +59,6 @@ const Group = () => {
         );
         return [conversation, ...newGroups];
       });
-      
      };
     pusherClient.bind("group:update", updateHandler);
     return () => {
@@ -67,9 +66,6 @@ const Group = () => {
       pusherClient.unbind("group:update", updateHandler);
     }
   }, [pusherKey]);
-
-  
-
   useEffect(() => {
     getAllGroups().then((res) => {
       setInitialGroups(res);

@@ -77,8 +77,6 @@ const GroupBody = ({ id }: GroupBodyProps) => {
       pusherClient.unsubscribe(id);
       pusherClient.unbind("messages:new", messageHandler);
       pusherClient.unbind("messages:update", updatedMessageHandler);
-
-
     }
   }, [id])
 

@@ -28,7 +28,6 @@ const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url }: GroupCardP
   const [isSeenBy, setIsSeenBy] = React.useState(false);
   const {data: session} = useSession()
   const pathname = usePathname();
-  console.log(seenBy)
   useEffect(() => {
     if (seenBy?.length > 0) {
       seenBy = seenBy.filter((id: any) => id !== session?.user._doc._id);
