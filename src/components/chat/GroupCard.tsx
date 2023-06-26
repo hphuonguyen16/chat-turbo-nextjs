@@ -10,7 +10,7 @@ import {
   Stack,
 } from "@mui/material";
 import { theme } from "../../theme"
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import {useSession} from "next-auth/react";
 
@@ -20,13 +20,17 @@ interface GroupCardProps {
   avatar: string;
   time: string;
   url: string;
+  seenBy: any;
 }
 
-const GroupCard = ({ name, latestMessage, avatar, time, url }: GroupCardProps) => {
+const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url }: GroupCardProps) => {
+  const isSeen = useRef(false)
   const [isActive, setIsActive] = React.useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
-
+  if ( seenBy?.length > 0 ) {
+    isSeen.current = true
+  }
   useEffect(() => {
     if (pathname === url) {
       setIsActive(true);
@@ -74,7 +78,9 @@ const GroupCard = ({ name, latestMessage, avatar, time, url }: GroupCardProps) =
           primary={<Typography variant="h6">{name}</Typography>}
           secondary={
             <React.Fragment>
-              <Typography noWrap sx={{ marginTop: "10px", opacity: "0.5"}}>
+              <Typography noWrap 
+        
+              sx={{ marginTop: "10px", opacity: "0.5", color: !isSeen.current ? "red" : ""}}>
                 {latestMessage}
               </Typography>
             </React.Fragment>
@@ -92,7 +98,7 @@ const GroupCard = ({ name, latestMessage, avatar, time, url }: GroupCardProps) =
         >
           <Stack
             direction="column"
-            gap="3px"
+            gap="15px"
             sx={{ justifyContent: "center", alignItems: "center" }}
           >
             <Typography sx={{ fontSize: "12px", opacity: "0.7" }}>
@@ -100,8 +106,8 @@ const GroupCard = ({ name, latestMessage, avatar, time, url }: GroupCardProps) =
             </Typography>
             <div
               style={{
-                width: "25px",
-                height: "25px",
+                width: "5px",
+                height: "5px",
                 display: "flex",
                 background: "#2065D1",
                 borderRadius: "50%",
@@ -111,7 +117,6 @@ const GroupCard = ({ name, latestMessage, avatar, time, url }: GroupCardProps) =
                 justifyContent: "center",
               }}
             >
-              2
             </div>
           </Stack>
         </ListItem>

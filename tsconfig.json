@@ -33,6 +33,6 @@
     "src/components/chat/MessageCard.jsx",
     "src/app/api/group/route.js",
     "src/app/api/message/route.js"
-  ],
+, "src/app/message/[...id]/page.jsx", "src/components/profile/UserBanner.jsx", "src/components/chat/GroupCard.tsx"  ],
   "exclude": ["node_modules"]
 }

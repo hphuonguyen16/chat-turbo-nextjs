@@ -15,99 +15,106 @@ import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import { theme } from "../../theme"
 import { useRef, useEffect } from 'react';
 import { pusherClient } from '@/libs/pusher';
-import message from '@/models/message';
-import {find} from 'lodash'
-import { AnyCnameRecord } from 'dns';
+import { find } from 'lodash'
 
 
 
 interface GroupBodyProps {
-    id: string
+  id: string
 }
 
 const GroupBody = ({ id }: GroupBodyProps) => {
-    const { data: session } = useSession();
+  const { data: session } = useSession();
   const [initialMessages, setInitialMessages] = React.useState([]);
-    const [message, setMessage] = React.useState("");
-    async function getAllMessages() {
-        const messages = await fetch(`/api/group/message/${id}`, {
-            method: "GET",
-        });
-        const data = await messages.json();
-        return data;
-    }
-    useEffect(() => {
-        getAllMessages().then((res) => {
-            setInitialMessages(res);
-        })
-    }, []);
+  const [message, setMessage] = React.useState("");
+  async function getAllMessages() {
+    const messages = await fetch(`/api/group/message/${id}`, {
+      method: "GET",
+    });
+    const data = await messages.json();
+    return data;
+  }
+  async function seenMessages() {
+    const messages = await fetch(`/api/group/${id}/seen`, {
+      method: "POST",
+    });
+    const data = await messages.json();
+    return data;
+  }
+  useEffect(() => {
+    seenMessages();
+  }, [id])
+  useEffect(() => {
+    getAllMessages().then((res) => {
+      setInitialMessages(res);
+    })
+  }, []);
   useEffect(() => {
     pusherClient.subscribe(id);
-    const messageHandler = (message: any) => { 
-       setInitialMessages((current : any) => {
-         if (find(current, { _id: message._id })) {
-           return current;
-         }
-         return [...current, message];
-       });
+    const messageHandler = (message: any) => {
+      setInitialMessages((current: any) => {
+        if (find(current, { _id: message._id })) {
+          return current;
+        }
+        return [...current, message];
+      });
     }
     pusherClient.bind("messages:new", messageHandler);
     return () => {
       pusherClient.unsubscribe(id);
       pusherClient.unbind("messages:new", messageHandler);
     }
-  },[id])
-  
-    const sendMessage = async () => {
-        await fetch(`/api/message`, {
-            method: "POST",
-          body: JSON.stringify({
-                sender: session?.user._doc._id,
-                recipient: null,
-                recipientGroup: id,
-                content: message,
-                parentMessage: null,
-                hearts: null,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+  }, [id])
+
+  const sendMessage = async () => {
+    await fetch(`/api/message`, {
+      method: "POST",
+      body: JSON.stringify({
+        sender: session?.user._doc._id,
+        recipient: null,
+        recipientGroup: id,
+        content: message,
+        parentMessage: null,
+        hearts: null,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   };
-  
-  console.log(initialMessages)
+
 
   return (
     <>
-      <Box 
-      sx={{
-        height: "80vh",
-      overflowY: "auto",
-      overflowX: "hidden"
-      }}
+      <Box
+        sx={{
+          height: "80vh",
+          overflowY: "auto",
+          overflowX: "hidden"
+        }}
       >
-      {initialMessages.map((message: any) => (
-        <MessageCard
-          key={message._id}
-          avatar={
-            message.sender._id === session?.user._doc._id
-              ? ""
-              : message.sender.avatar
-          }
-          title={
-            message.sender._id === session?.user._doc._id
-              ? ""
-              : message.sender.name + " " + message.sender.surname
-          }
-          position={
-            message.sender._id === session?.user._doc._id ? "right" : "left"
-          }
-          text={message.content}
-          date={new Date(message.createdAt).toLocaleString()}
-          type="text"
-        />
-      ))}
-        </Box>
+        {initialMessages.map((message: any) => (
+          <MessageCard
+            key={message._id}
+            avatar={
+              message.sender._id === session?.user._doc._id
+                ? ""
+                : message.sender.avatar
+            }
+            title={
+              message.sender._id === session?.user._doc._id
+                ? ""
+                : message.sender.name + " " + message.sender.surname
+            }
+            position={
+              message.sender._id === session?.user._doc._id ? "right" : "left"
+            }
+            text={message.content}
+            date={new Date(message.createdAt).toLocaleString()}
+            type="text"
+          />
+        ))}
+      </Box>
       <Box
         sx={{
           bottom: "0",
@@ -156,22 +163,22 @@ const GroupBody = ({ id }: GroupBodyProps) => {
               height: "50px",
             },
           }}
-                  placeholder="Type a message"
-                  value={message}
-                  onKeyDown={
-                      (e) => {
-                            if (e.key === "Enter") {
-                                sendMessage()
-                                //reset value in input
-                                setMessage("")
-                              
-                            }
-                        }
-                  }
-                  onChange={(e) => {
-                    setMessage(e.target.value);
-                  }
-                    }
+          placeholder="Type a message"
+          value={message}
+          onKeyDown={
+            (e) => {
+              if (e.key === "Enter") {
+                sendMessage()
+                //reset value in input
+                setMessage("")
+
+              }
+            }
+          }
+          onChange={(e) => {
+            setMessage(e.target.value);
+          }
+          }
         />
       </Box>
     </>

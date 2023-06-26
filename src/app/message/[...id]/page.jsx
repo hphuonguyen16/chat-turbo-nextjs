@@ -22,24 +22,11 @@ import { useRef } from "react";
 import GroupBody from "@/components/chat/GroupBody";
 import AvatarOnline from "@/components/chat/AvatarOnline";
 
-export type GroupInfoProps = {
-  _id: string;
-  name: string;
-  avatar: string;
-  members: {
-    _id: string;
-    name: string;
-    surname: string;
-    avatar: string;
-    quote: string;
-  }[];
-  createdAt: Date;
-  updatedAt: Date;
-};
+
 const Page = () => {
   const { data: session } = useSession();
   const { id } = useParams();
-  const [groupInfo, setGroupInfo] = useState<GroupInfoProps>();
+  const [groupInfo, setGroupInfo] = useState()
   const isGroup = useRef(false);
   if (groupInfo?.members?.length > 2) {
     isGroup.current = true;
@@ -127,7 +114,7 @@ const Page = () => {
         </Box>
         <Divider />
         <Box sx={{maxHeight:"100vh", overflow:"auto"}}>
-          <GroupBody id={id} />
+          <GroupBody id={id}  />
         </Box>
       </Grid>
       <Divider />

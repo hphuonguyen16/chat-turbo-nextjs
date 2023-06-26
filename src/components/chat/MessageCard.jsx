@@ -27,7 +27,7 @@ const MessageCard = ({
                 height: "56px",
               }}
               alt="Remy Sharp"
-              src="https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+              src={avatar}
             />
           </ListItemAvatar>
           <MessageBox
