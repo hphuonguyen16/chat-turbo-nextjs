@@ -19,7 +19,7 @@ const userSchema = new Schema(
     },
     avatar: {
       type: String,
-      default: "https://demos.themeselection.com/marketplace/materio-mui-react-nextjs-admin-template/demo-1/images/avatars/1.png"
+      default: "https://res.cloudinary.com/dndjxbram/image/upload/v1687838044/e0pz9eaz3f16trot8jup.jpg"
     },
     cover_img: {
       type: String,

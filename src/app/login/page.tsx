@@ -82,6 +82,13 @@ export default function LoginPage() {
           label="Password"
           type='password'
           onChange={ (e) => { setPassword(e.target.value) }}
+          onKeyDown={
+            (e) => {
+              if (e.key === 'Enter') {
+                login();
+              }
+            }
+          }
         />
       </Stack>
 
