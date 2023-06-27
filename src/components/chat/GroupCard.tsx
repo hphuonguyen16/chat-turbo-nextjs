@@ -30,13 +30,9 @@ const GroupCard = ({ name, latestMessage,seenBy, avatar, time, url, sender }: Gr
   const {data: session} = useSession()
   const pathname = usePathname();
   useEffect(() => {
-  if (seenBy?.length > 0) {
-    seenBy = seenBy.filter((id: any) => (id !== session?.user._doc._id ) || (id !== sender));
-  }
-  if (seenBy?.length > 0) {
-    isSeenBy.current = true;  
-  }
-  else if (seenBy?.length === 0) {
+  if (seenBy.includes(session?.user._doc._id)) {
+    isSeenBy.current = true;
+  } else {
     isSeenBy.current = false;
   }
   return () => {

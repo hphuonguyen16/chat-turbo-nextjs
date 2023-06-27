@@ -14,7 +14,6 @@ export const POST = async (req) => {
   }
   const myId = session.sub;
   const body = await req.json();
-  console.log(body);
   const { avatar } = body;
   await User.findByIdAndUpdate(myId, { avatar });
   return new NextResponse("Update img successfully", { status: 200 });

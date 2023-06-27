@@ -33,11 +33,11 @@ export default function RootLayout({
     return (
       <html lang="en">
         <body className={poppins.className}>
-        <SessionProvider session={session}>
-          <ThemeProvider>
-                {children}
-          </ThemeProvider>
-      </SessionProvider>
+          <SessionProvider session={session}>
+            <ThemeProvider>
+              {children}
+            </ThemeProvider>
+          </SessionProvider>
         </body>
       </html>
     );
@@ -45,15 +45,15 @@ export default function RootLayout({
     return (
       <html lang="en">
         <body className={poppins.className}>
-        <SessionProvider session={session}>
-          <ThemeProvider>
-          <ProSidebarProvider>
-            <Layout>
-                {children}
-            </Layout>
-            </ProSidebarProvider>
-          </ThemeProvider>
-      </SessionProvider>
+          <SessionProvider session={session}>
+            <ThemeProvider>
+                <ProSidebarProvider>
+                  <Layout>
+                    {children}
+                  </Layout>
+                </ProSidebarProvider>
+            </ThemeProvider>
+          </SessionProvider>
         </body>
       </html>
     );
