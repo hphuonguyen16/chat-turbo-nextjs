@@ -14,7 +14,6 @@ export const POST = async (req) => {
   }
   const myId = session.sub;
   const body = await req.json();
-  console.log(body);
   const { recipient, recipientGroup, content, parentMessage, hearts } = body;
   const message = await Message.create({
     sender: myId,

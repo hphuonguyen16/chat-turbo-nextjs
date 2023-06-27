@@ -10,7 +10,6 @@ import {
 	InputLabel,
 } from "@mui/material";
 import { ReactNode } from "react";
-import useTranslation from "next-translate/useTranslation";
 import { theme } from "../../../theme";
 import useResponsive from "../../../hooks/useResponsive";
 import { Close, Done } from "@mui/icons-material";
@@ -26,7 +25,6 @@ type ModalProps = {
 };
 
 const RootModal = ({ title, variant, open, handleClose, handleOk, children, closeOnly }: ModalProps) => {
-	const { t } = useTranslation();
 
 	const isMobile = useResponsive("down", "sm");
 
@@ -55,7 +53,7 @@ const RootModal = ({ title, variant, open, handleClose, handleOk, children, clos
 					p: isMobile ? 3 : 4,
 				}}>
 				<Typography id="modal-modal-title" variant="h4" component="h2">
-					{title ? title : t("common:" + variant)}
+					{title ? title : variant}
 				</Typography>
 				<div className="my-3">{children}</div>
 				<div className="flex justify-end mt-6">
@@ -68,7 +66,7 @@ const RootModal = ({ title, variant, open, handleClose, handleOk, children, clos
 								":hover": { background: colors[variant].lighter, borderColor: colors[variant].main },
 							}}
 							onClick={handleClose}>
-							{isMobile ? <Close sx={{ color: "red" }} /> : t("common:Cancel")}
+							{isMobile ? <Close sx={{ color: "red" }} /> : "Cancel"}
 						</Button>
 					)}
 					<Button
@@ -81,7 +79,7 @@ const RootModal = ({ title, variant, open, handleClose, handleOk, children, clos
 							":hover": { background: `${colors[variant].dark} !important` },
 						}}
 						onClick={handleOk}>
-						{isMobile ? <Done sx={{ color: "green" }} /> : closeOnly ? t("common:Close") : t("common:Ok")}
+						{isMobile ? <Done sx={{ color: "green" }} /> : closeOnly ? "Close" : "OK"}
 					</Button>
 				</div>
 			</Box>

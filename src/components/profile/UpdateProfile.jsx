@@ -9,26 +9,19 @@ import RootModal from "../modals/RootModal"
 import AvatarEditor from "./avatar/AvatarEditor";
 import { getCroppedImg } from "./avatar/AvatarEditor";
 import useResponsive from "@/hooks/useResponsive";
-import useTranslation from "next-translate/useTranslation";
 import axios from "axios";
 
 const UpdateProfile = ({
   userInfo,
   handleOk,
-  handleGetImage,
   profileImage,
-}: {
-  userInfo: any;
-  handleOk: any;
-  handleGetImage: any;
-  profileImage: any;
 }) => {
-  const { t } = useTranslation();
-  const updatedUserInfo = useRef<any>();
+  const updatedUserInfo = useRef()
   const [file, setFile] = useState("");
   const [open, setOpen] = useState(false);
-  const imgRef = useRef<any>(null);
-  const [completedCrop, setCompletedCrop] = useState<any>(null);
+  const [profileImge, setProfileImage] = useState(profileImage);
+  const imgRef = useRef(null);
+  const [completedCrop, setCompletedCrop] = useState(null);
   const isMobile = useResponsive("down", "sm");
   const handleUpdateUserInfo = async () => {
     const data = {
@@ -53,7 +46,6 @@ const UpdateProfile = ({
   const uploadImage = async () => {
     if (imgRef.current && completedCrop) {
       const img = await getCroppedImg(imgRef.current, completedCrop, "avatar");
-      console.log(img);
        const formData = new FormData();
        formData.append("file", img);
       formData.append("upload_preset", "a7i0et5j");
@@ -63,7 +55,6 @@ const UpdateProfile = ({
           formData
         );
           // handleGetImage();
-        console.log(response);
         await fetch(`/api/user/image`, {
           method: "POST",
           body: JSON.stringify({
@@ -72,25 +63,14 @@ const UpdateProfile = ({
           headers: {
             "Content-Type": "application/json",
           },
-        });
-          onFinishUpload();
+        })
+        setProfileImage(response.data.secure_url);
+        onFinishUpload();
+        handleOk();
 
       } catch (error) {
         console.error(error);
       }
-      // const base64Img = img.split(",").slice(1).join(",");
-      // const response = await fetch("/api/identity/profile/my-avatar", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(base64Img),
-      // });
-      // const result = await response.json();
-      // if (result.success) {
-      //   handleGetImage();
-      //   onFinishUpload();
-      // }
     }
   };
 
@@ -121,7 +101,7 @@ const UpdateProfile = ({
         >
           <AvatarEditor
             sourceImg={file}
-            onUploadImage={(uploadImage: any) => {
+            onUploadImage={(uploadImage) => {
               imgRef.current = uploadImage;
             }}
             setCompletedCrop={(completedCrop) => {
@@ -138,7 +118,7 @@ const UpdateProfile = ({
             }}
           >
             <AvatarUploadTrigger
-              profileImage={profileImage}
+              profileImage={profileImge}
               onNewSelectedFile={(file) => {
                 setFile(file);
                 setOpen(true);
@@ -176,7 +156,7 @@ const UpdateProfile = ({
                   label="Username"
                   fullWidth
                   defaultValue={userInfo.username || ""}
-                  onChange={(e: any) => {
+                  onChange={(e) => {
                     updatedUserInfo.current.userName = e.target.value;
                   }}
                   sx={{ marginBottom: "13px", marginTop: "13px" }}
@@ -188,7 +168,7 @@ const UpdateProfile = ({
                   label="Name"
                   fullWidth
                   defaultValue={userInfo?.name || ""}
-                  onChange={(e: any) => {
+                  onChange={(e) => {
                     updatedUserInfo.current.name = e.target.value;
                   }}
                   sx={{ marginBottom: "13px" }}
@@ -200,7 +180,7 @@ const UpdateProfile = ({
                   label="Surname"
                   fullWidth
                   defaultValue={userInfo?.surname || ""}
-                  onChange={(e: any) => {
+                  onChange={(e) => {
                     updatedUserInfo.current.surname = e.target.value;
                   }}
                   sx={{ marginBottom: "13px" }}
@@ -213,7 +193,7 @@ const UpdateProfile = ({
                   label="Email"
                   fullWidth
                   defaultValue={userInfo?.email || ""}
-                  onChange={(e: any) => {
+                  onChange={(e) => {
                     updatedUserInfo.current.email = e.target.value;
                   }}
                   sx={{ marginBottom: "13px" }}
@@ -225,7 +205,7 @@ const UpdateProfile = ({
                   label="Quote"
                   fullWidth
                   defaultValue={userInfo?.quote || ""}
-                  onChange={(e: any) => {
+                  onChange={(e) => {
                     updatedUserInfo.current.phoneNumber = e.target.value;
                   }}
                   sx={{ marginBottom: "13px" }}
@@ -243,7 +223,7 @@ const UpdateProfile = ({
                   }}
                   onClick={handleUpdateUserInfo}
                 >
-                  {t("common:SaveChanges")}
+                  Save Changes
                 </Button>
               </Grid>
             </Grid>
