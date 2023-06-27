@@ -48,7 +48,7 @@ const UpdateProfile = ({
       const img = await getCroppedImg(imgRef.current, completedCrop, "avatar");
        const formData = new FormData();
        formData.append("file", img);
-      formData.append("upload_preset", "a7i0et5j");
+      formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
       try {
         const response = await axios.post(
           `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,

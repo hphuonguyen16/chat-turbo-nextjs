@@ -25,6 +25,10 @@ body {
   display: none;
 } */
 
+.rce-mbox-photo--img{
+  max-height: "100%" !important;
+  max-width: "330px" !important;
+}
 .rce-mbox-text{
     padding: 15px;
     background: #ebf0f5;
