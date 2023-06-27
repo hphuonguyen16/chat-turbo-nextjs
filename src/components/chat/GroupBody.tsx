@@ -8,6 +8,7 @@ import { useRef, useEffect } from 'react';
 import { pusherClient } from '@/libs/pusher';
 import { find } from 'lodash'
 import MessageInput from './MessageInput';
+import { setImmediate } from 'timers';
 
 
 
@@ -19,6 +20,7 @@ const GroupBody = ({ id }: GroupBodyProps) => {
   const { data: session } = useSession();
   const [initialMessages, setInitialMessages] = React.useState([]);
   const [message, setMessage] = React.useState("");
+  const bottomRef = useRef<HTMLDivElement>(null);
   async function getAllMessages() {
     const messages = await fetch(`/api/group/message/${id}`, {
       method: "GET",
@@ -33,16 +35,22 @@ const GroupBody = ({ id }: GroupBodyProps) => {
     const data = await messages.json();
     return data;
   }
+  const scrollToMenu = (ref: any) => {
+    setImmediate(() => ref.current.scrollIntoView({behavior: "smooth",inline: "center", }));
+};
   useEffect(() => {
     seenMessages();
   }, [id])
   useEffect(() => {
     getAllMessages().then((res) => {
       setInitialMessages(res);
+      scrollToMenu(bottomRef);
     })
   }, []);
   useEffect(() => {
     pusherClient.subscribe(id);
+    scrollToMenu(bottomRef);
+
     const messageHandler = (message: any) => {
       seenMessages();
       setInitialMessages((current: any) => {
@@ -51,6 +59,7 @@ const GroupBody = ({ id }: GroupBodyProps) => {
         }
         return [...current, message];
       });
+      scrollToMenu(bottomRef);
     };
     const updatedMessageHandler = (newMessage: any) => {
       setInitialMessages((current : any) =>
@@ -61,9 +70,11 @@ const GroupBody = ({ id }: GroupBodyProps) => {
           return currentMessage;
         })
       );
+      scrollToMenu(bottomRef);
     };
     pusherClient.bind("messages:new", messageHandler);
     pusherClient.bind("messages:update", updatedMessageHandler);
+
 
     return () => {
       pusherClient.unsubscribe(id);
@@ -103,6 +114,7 @@ const GroupBody = ({ id }: GroupBodyProps) => {
             seenBy={message.seenBy}
           />
         ))}
+        <div ref={bottomRef}></div>
       </Box>
       <Box
         sx={{
