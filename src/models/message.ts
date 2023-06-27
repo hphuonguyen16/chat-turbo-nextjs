@@ -22,6 +22,7 @@ const messageSchema = new Schema(
       ref: "Message",
       default: null,
     },
+    type : { type: String, enum:['text','photo','audio','file'] ,default: "text" },
     hearts: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     seenBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },

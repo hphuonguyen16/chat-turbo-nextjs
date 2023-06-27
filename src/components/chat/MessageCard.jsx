@@ -20,7 +20,7 @@ const MessageCard = ({
   const { data: session } = useSession();
   // loai bo id cua minh ra khoi seenBy
   if (seenBy?.length > 0) {
-    seenBy = seenBy.filter((id) => id !== session.user._doc._id);
+    seenBy = seenBy.filter((id) => id !== session?.user._doc._id);
   }
   return (
     <Box>
@@ -40,26 +40,38 @@ const MessageCard = ({
             position={position}
             title={title}
             type={type}
-            text={text}
+            text={type === "text" ? text : ""}
             date={date}
             replyButton={true}
+            data={{
+              uri: text,
+            }}
           />
         </ListItem>
       ) : (
-        <div style={{position: "relative"}}>
-        <MessageBox
-          position="right"
-          type={type}
-          text={text}
-          date={date}
-          replyButton={true}
+        <div style={{ position: "relative" }}>
+          <MessageBox
+            position="right"
+            type={type}
+            text={type === "text" ? text : ""}
+            date={date}
+            replyButton={true}
+            data={{
+              uri: text,
+            }}
           />
-          { seenBy?.length ? <CheckCircleRoundedIcon sx={{color:"green",
-            position: "absolute",
-            fontSize: "15px",
-            right: "8px",
-            bottom: "12px"}}/> : null}
-          </div>
+          {seenBy?.length ? (
+            <CheckCircleRoundedIcon
+              sx={{
+                color: "green",
+                position: "absolute",
+                fontSize: "15px",
+                right: "8px",
+                bottom: "12px",
+              }}
+            />
+          ) : null}
+        </div>
       )}
     </Box>
   );
