@@ -74,7 +74,7 @@ const Group = () => {
   }, []);
   return (
     <Box>
-      <Box sx={{ padding: "40px" }}>
+      <Box sx={{ padding: "25px" }}>
         <ListItem>
           <ListItemAvatar>
             <div
@@ -84,7 +84,7 @@ const Group = () => {
                 height: "80px",
                 borderRadius: "50%",
                 background:
-                  "radial-gradient(closest-side, white 88%, transparent 80% 100%), conic-gradient(#1355FF 75%, transparent 0)",
+                 "radial-gradient(closest-side, white 88%, white 80%, transparent 100%), conic-gradient(rgb(19, 85, 255) 75%, transparent 0deg)",
                 position: "relative",
               }}
             >
