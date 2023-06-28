@@ -27,9 +27,12 @@ import { useRouter } from "next/navigation";
 import { pusherClient } from "@/libs/pusher";
 import AvatarOnline from "./AvatarOnline";
 import { Visibility } from "@mui/icons-material";
+import RootModal from "../modals/RootModal";
+import NewGroup from "./NewGroup";
 
 const Group = () => {
   const [initialGroups, setInitialGroups] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
   const router = useRouter();
   const { data: session } = useSession();
   async function getAllGroups() {
@@ -84,7 +87,7 @@ const Group = () => {
                 height: "80px",
                 borderRadius: "50%",
                 background:
-                 "radial-gradient(closest-side, white 88%, white 80%, transparent 100%), conic-gradient(rgb(19, 85, 255) 75%, transparent 0deg)",
+                  "radial-gradient(closest-side, white 88%, white 80%, transparent 100%), conic-gradient(rgb(19, 85, 255) 75%, transparent 0deg)",
                 position: "relative",
               }}
             >
@@ -172,12 +175,18 @@ const Group = () => {
           }}
         >
           <Typography variant="h4"> Messages</Typography>
-          <Button sx={{ marginRight: "15px" }}>
+          <Button sx={{ marginRight: "15px" }} onClick={() => setOpen(true)}>
             <AddToPhotosOutlinedIcon
               fontSize="medium"
               sx={{ opacity: "0.5" }}
             />
           </Button>
+          
+            <NewGroup handleOk={(newGroup : any) => {
+              newGroup.current = newGroup;
+          }}
+            open={open} handleClose={() => setOpen(false)}
+          />
         </Box>
         <Box>
           <FormControl sx={{ width: "90%" }}>
