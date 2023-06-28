@@ -217,6 +217,10 @@ const Group = () => {
           <Box sx={{ width: "100%" }}>
             <List sx={{ width: "92%", margin: "auto" }}>
               {initialGroups.map((group: any) => {
+                let isGroup = false;
+                if (group?.members?.length > 2) {
+                  isGroup = true;
+                }
                 const friend = group?.members.filter(
                   (member: any) => member._id !== session?.user._doc._id
                 );
@@ -225,8 +229,8 @@ const Group = () => {
                     <GroupCard
                       key={group.id}
                       url={`/message/${group._id}`}
-                      name={friend[0]?.name + " " + friend[0]?.surname}
-                      avatar={friend[0]?.avatar}
+                      name={isGroup ? group.name : friend[0]?.name + " " + friend[0]?.surname}
+                      avatar={isGroup ? group.avatar : friend[0]?.avatar}
                       latestMessage={
                         group.latestMessage?.sender === session?.user._doc._id
                           ? "You: " + group.latestMessage?.content

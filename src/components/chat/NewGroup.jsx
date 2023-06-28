@@ -68,11 +68,8 @@ const InputWrapper = styled("div")(
 `
 );
 
-interface TagProps extends ReturnType<AutocompleteGetTagProps> {
-  label: string;
-}
 
-function Tag(props: TagProps) {
+function Tag(props) {
   const { label, onDelete, ...other } = props;
   return (
     <div {...other}>
@@ -82,7 +79,7 @@ function Tag(props: TagProps) {
   );
 }
 
-const StyledTag = styled(Tag)<TagProps>(
+const StyledTag = styled(Tag)(
   ({ theme }) => `
   display: flex;
   align-items: center;
@@ -167,27 +164,12 @@ const Listbox = styled("ul")(
   }
 `
 );
-interface FriendOptionType {
-  name: string;
-  id: string;
-  avatar: string;
-}
-interface Props {
-    handleOk: (newGroup: any) => void;
-    open: boolean;
-    handleClose: () => void;
-}
-
-export default function CustomizedHook({handleOk, open, handleClose} : Props) {
-    const { data: session } = useSession();
-     const newGroup = React.useRef({
-       members: [],
-       name: "",
-     });
+export default function CustomizedHook({handleOk, open, handleClose}) {
+    const name = React.useRef('');
     const router = useRouter();
-    const [friends, setFriends] = useState<FriendOptionType[]>([]);
+    const [friends, setFriends] = useState([]);
     const getFriends = async () => {
-        const res = await fetch(`/api/friend/get/${session?.user._doc._id}`, {
+        const res = await fetch(`/api/friend/get`, {
             method: 'GET',
         });
         const data = await res.json();
@@ -199,7 +181,7 @@ export default function CustomizedHook({handleOk, open, handleClose} : Props) {
         method: "POST",
         body: JSON.stringify({
           members: members,
-          name: "New Group",
+          name: name.current,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -207,12 +189,12 @@ export default function CustomizedHook({handleOk, open, handleClose} : Props) {
       });
         if (res.status === 200) {
             handleClose();
-        router.push(`/message`);
+        router.push(`/message/${(await res.json())._id}`);
       }
     };
     useEffect(() => {
         getFriends().then((data) => {
-             const friendsMap = data.map((friend : any) => {
+             const friendsMap = data.map((friend) => {
                 return {
                     name: friend.name + " " + friend.surname,
                     id: friend._id,
@@ -243,7 +225,6 @@ export default function CustomizedHook({handleOk, open, handleClose} : Props) {
     openOnFocus: true,
     getOptionLabel: (option) => option?.name,
   });
-    console.log(value);
     return (
       <RootModal
         title="New group"
@@ -259,8 +240,8 @@ export default function CustomizedHook({handleOk, open, handleClose} : Props) {
               ref={setAnchorEl}
               className={focused ? "focused" : ""}
             >
-              {value.map((option: FriendOptionType, index: number) => (
-                <StyledTag label={option.name} {...getTagProps({ index })} />
+              {value.map((option, index) => (
+                <StyledTag key={option.id} label={option.name} {...getTagProps({ index })} />
               ))}
               <input {...getInputProps()} />
             </InputWrapper>
@@ -275,14 +256,14 @@ export default function CustomizedHook({handleOk, open, handleClose} : Props) {
                 zIndex: "-10",
               }}
             >
-              No accounts found.
+              { value.length > 0 ? "" : "Please select friends to create group"}
             </Typography>
             {groupedOptions.length > 0 ? (
               <div>
                 <Listbox {...getListboxProps()}>
-                  {(groupedOptions as typeof friends).map(
-                    (option: FriendOptionType, index: number) => (
-                      <li {...getOptionProps({ option, index })}>
+                  {(groupedOptions).map(
+                    (option, index) => (
+                      <li key={option.id} {...getOptionProps({ option, index })}>
                         <Avatar src={option.avatar} />
                         <span>{option.name}</span>
                         <CheckIcon fontSize="small" />
@@ -299,7 +280,7 @@ export default function CustomizedHook({handleOk, open, handleClose} : Props) {
             label="Group name"
             variant="outlined"
             onChange={(e) => {
-              newGroup.current.name = e.target.value;
+              name.current = e.target.value;
             }}
           />
         </Root>
