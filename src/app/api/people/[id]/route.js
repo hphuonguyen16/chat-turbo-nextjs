@@ -4,12 +4,17 @@ import Group from '@/models/group';
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-export const GET = async (req) => {
+export const GET = async (req, {params}) => {
     await connect();
     const session = await getToken({ req, secret: process.env.SECRET });
     if (!session) {
         return new NextResponse(JSON.stringify({}), { status: 401 });
     }
-    const myUser = await User.findById(session.sub).populate('waitingRequestFriends');
-    return new NextResponse(JSON.stringify(myUser.waitingRequestFriends), { status: 200 });
+    const myUser = await User.findById(session.sub);
+   
+    // get 5 users not in friends list
+    const users = await User.find({
+        _id: { $nin: [...myUser.friends, id] },
+    }).limit(5);
+    return new NextResponse(JSON.stringify(users), { status: 200 });
 };

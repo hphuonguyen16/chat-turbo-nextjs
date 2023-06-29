@@ -7,6 +7,9 @@ import { getToken } from 'next-auth/jwt';
 export const GET = async (req) => {
     await connect();
     const session = await getToken({ req, secret: process.env.SECRET });
+    if (!session) {
+        return new NextResponse(JSON.stringify({}), { status: 401 });
+    }
     const myUser = await User.findById(session.sub);
     // get 5 users not in friends list
     const users = await User.find({
