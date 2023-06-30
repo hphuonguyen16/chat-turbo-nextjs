@@ -1,6 +1,6 @@
 import UserBanner from '@/components/profile/UserBanner'
 import React from 'react'
-async function getUser(id) {
+async function getUser(id: string) {
   const response = await fetch(`http://localhost:3000/api/user/${id}`, {
       method: 'GET',
   });
@@ -9,6 +9,9 @@ async function getUser(id) {
 export default async function Page ({
   params,
   searchParams,
+}:{
+  params: any,
+  searchParams: any,
 }) {
   const id = searchParams?.id ? searchParams : params;
   const user = await getUser(id['id']);

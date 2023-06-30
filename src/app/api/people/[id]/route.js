@@ -7,7 +7,6 @@ export const GET = async (req, {params}) => {
     await connect();
     const id = params.id;
     const myUser = await User.findById(id);
-   
     // get 5 users not in friends list
     const users = await User.find({
         _id: { $nin: [...myUser.friends, id] },
