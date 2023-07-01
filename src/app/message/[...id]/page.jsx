@@ -8,6 +8,7 @@ import {
   Divider,
   Stack,
   AvatarGroup,
+  Skeleton
 } from "@mui/material";
 import DuoOutlinedIcon from "@mui/icons-material/DuoOutlined";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
@@ -104,7 +105,7 @@ const Page = () => {
                       groupInfo?.members?.filter(
                         (member) => member._id !== session?.user?._doc._id
                       )[0]?.surname
-                  : "Loading..."}
+                  : <Skeleton variant="text" width="100px" />}
               </Typography>
             </Stack>
             <Stack direction="row" style={{ display: "flex", gap: "15px" }}>
