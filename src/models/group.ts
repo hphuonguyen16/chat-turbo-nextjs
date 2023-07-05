@@ -16,10 +16,10 @@ const GroupSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
     },
-    lastSeen:[
+    lastSeen: [
       {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        message: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },  
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "LastSeen",
       }
     ]
   },

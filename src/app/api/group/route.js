@@ -2,9 +2,9 @@ import connect from '@/utils/db';
 import Group from '@/models/group';
 import Message from '@/models/message';
 import User from '@/models/user';
+import LastSeen from '@/models/lastSeen';
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { pusherServer } from '@/libs/pusher';
 
 export const GET = async (req) => {
     await connect();
@@ -30,7 +30,6 @@ export const POST = async (req) => {
     const myID = session.sub;
     const { name, members } = body;
     members.push(myID);
-    const lastSeen = [];
     const group = await Group.create({
         name,
         members,
@@ -41,13 +40,19 @@ export const POST = async (req) => {
         recipientGroup: group._id,
         content: 'Now you can chat with your friends!',
     });
-    members.map(async (member) => {
-        lastSeen.push({ user: member, message: newMessage._id });
-    });
-    await Group.findByIdAndUpdate(group._id, {
+    const lastSeenPromises = members.map((member) => {
+        return LastSeen.create({
+          user: member,
+          message: newMessage._id,
+        });
+      });
+    
+      const lastSeen = await Promise.all(lastSeenPromises);
+    
+      await Group.findByIdAndUpdate(group._id, {
         latestMessage: newMessage._id,
-        lastSeen,
-    });
+        lastSeen: lastSeen.map((seen) => seen._id),
+      });
 
     return new NextResponse(JSON.stringify(group), { status: 200 });
 };

@@ -1,5 +1,6 @@
 import connect from "@/utils/db";
 import Group from "@/models/group";
+import LastSeen from '@/models/lastSeen';
 import Message from "@/models/message";
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
