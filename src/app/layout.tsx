@@ -8,6 +8,9 @@ import { SessionProvider } from "next-auth/react";
 import { usePathname } from 'next/navigation'
 import { ProSidebarProvider } from "react-pro-sidebar";
 import Head from 'next/head';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 
 
 
@@ -34,16 +37,16 @@ export default function RootLayout({
     return (
       <html lang="en">
         <Head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <meta name="description" content={metadata.description} />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={metadata.title} />
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+          <meta name="description" content={metadata.description} />
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content={metadata.title} />
         </Head>
         <body className={poppins.className}>
           <SessionProvider session={session}>
-            <ThemeProvider>
-              {children}
-            </ThemeProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <ThemeProvider>{children}</ThemeProvider>
+            </LocalizationProvider>
           </SessionProvider>
         </body>
       </html>
@@ -60,11 +63,13 @@ export default function RootLayout({
         <body className={poppins.className}>
           <SessionProvider session={session}>
             <ThemeProvider>
+               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <ProSidebarProvider>
                   <Layout>
                     {children}
                   </Layout>
-                </ProSidebarProvider>
+              </ProSidebarProvider>
+              </LocalizationProvider>
             </ThemeProvider>
           </SessionProvider>
         </body>
