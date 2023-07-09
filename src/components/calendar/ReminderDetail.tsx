@@ -18,21 +18,24 @@ import QueryBuilderOutlinedIcon from "@mui/icons-material/QueryBuilderOutlined";
 import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import RemoveCircleRoundedIcon from "@mui/icons-material/RemoveCircleRounded";
-
+import { ReminderInfoType } from "./Calendar";
 interface ReminderDetailProps {
-  onMouseLeave: () => void;
+  reminderdetail: ReminderInfoType;
+  startTime: string;
+  endTime: string;
 }
 
-const ReminderDetail = ({onMouseLeave} : ReminderDetailProps) => {
+
+const ReminderDetail = ({reminderdetail, startTime, endTime} : ReminderDetailProps) => {
   return (
-    <div style={{ width: "280px", height: "360px" }} onMouseLeave={onMouseLeave}>
+    <div style={{ width: "280px" }} >
       <Stack spacing={2}>
         <ListItemText
-          sx={{ marginLeft: "15px", marginTop: "18px" }}
+          sx={{ marginLeft: "15px" }}
           primary={
             <>
               <Typography variant="h4" sx={{ fontSize: "16px" }}>
-                Retrospective
+                {reminderdetail.title}
               </Typography>
             </>
           }
@@ -46,7 +49,7 @@ const ReminderDetail = ({onMouseLeave} : ReminderDetailProps) => {
                 </ListItemIcon>
                 <ListItemText>
                   <Typography sx={{ opacity: "0.7", fontSize: "12px" }}>
-                    Hue city
+                    {reminderdetail.location}
                   </Typography>
                 </ListItemText>
               </ListItem>
@@ -58,7 +61,7 @@ const ReminderDetail = ({onMouseLeave} : ReminderDetailProps) => {
                 </ListItemIcon>
                 <ListItemText>
                   <Typography sx={{ opacity: "0.7", fontSize: "12px" }}>
-                    8:00 AM - 10:00 AM
+                    {startTime + " - " + endTime}
                   </Typography>
                 </ListItemText>
               </ListItem>
@@ -98,10 +101,7 @@ const ReminderDetail = ({onMouseLeave} : ReminderDetailProps) => {
           </ListItemIcon>
           <ListItemText>
             <Typography sx={{ opacity: "0.8", fontSize: "12px" }}>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Blanditiis, inventore! Sint nihil labore mollitia architecto
-              sapiente. Voluptas cupiditate quo itaque amet alias, perspiciatis
-              sint nulla nisi eligendi cum, nihil enim.
+              {reminderdetail.description}
             </Typography>
           </ListItemText>
         </ListItemButton>
