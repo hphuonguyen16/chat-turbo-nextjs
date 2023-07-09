@@ -7,7 +7,6 @@ import {
   Avatar,
   ListItemText,
   Button,
-  Popover,
 } from "@mui/material";
 import { ReminderInfoType } from "./Calendar";
 import { useSession } from "next-auth/react";
@@ -15,6 +14,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { useRouter } from "next/navigation";
 import { theme } from "@/theme";
 import ReminderDetail from "./ReminderDetail";
+import { Popover } from "antd";
 interface ReminderCardProps {
   reminder: ReminderInfoType;
 }
@@ -58,6 +58,7 @@ const ReminderCard = ({ reminder }: ReminderCardProps) => {
    const id = open ? reminder._id : undefined;
   return (
     <>
+      <Popover content={<ReminderDetail reminderdetail={reminder} startTime={start} endTime={end} />} trigger="click">
       <div
         key={reminder._id}
         className="h-full mb-2.5"
@@ -131,26 +132,7 @@ const ReminderCard = ({ reminder }: ReminderCardProps) => {
           </Button>
         </Stack>
       </div>
-      <Popover
-        id={reminder._id}
-        sx={{
-          pointerEvents: "none",
-        }}
-        open={open}
-        elevation={8}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        onMouseLeave={handlePopoverClose}
-      >
-        <ReminderDetail onMouseLeave={handlePopoverClose} />
-      </Popover>
+    </Popover>
     </>
   );
 };

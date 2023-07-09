@@ -25,6 +25,8 @@ export type ReminderInfoType = {
   startTime: Date;
   endTime: Date;
   color: string;
+  location: string;
+  participants: any;
   group: any;
 };
 interface CalendarProps {
