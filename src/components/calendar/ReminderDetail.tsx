@@ -19,14 +19,25 @@ import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import RemoveCircleRoundedIcon from "@mui/icons-material/RemoveCircleRounded";
 import { ReminderInfoType } from "./Calendar";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 interface ReminderDetailProps {
   reminderdetail: ReminderInfoType;
   startTime: string;
   endTime: string;
 }
 
-
-const ReminderDetail = ({reminderdetail, startTime, endTime} : ReminderDetailProps) => {
+const ReminderDetail = ({ reminderdetail, startTime, endTime }: ReminderDetailProps) => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const handleParticipate = async () => {
+    const response = await fetch(`/api/reminder/add-participants/${reminderdetail._id}`, {
+      method: "PUT"
+    })
+    if (response.status === 200) {
+      router.refresh();
+    }
+  }
   return (
     <div style={{ width: "280px" }} >
       <Stack spacing={2}>
@@ -90,8 +101,9 @@ const ReminderDetail = ({reminderdetail, startTime, endTime} : ReminderDetailPro
             justifyContent: "left",
           }}
         >
-          <Avatar alt="Remy Sharp" src={""} sx={{ width: 20, height: 20 }} />
-          <Avatar alt="Remy Sharp" src={""} sx={{ width: 20, height: 20 }} />
+          {reminderdetail.participants.map((participant: any) => (
+            <Avatar alt="Remy Sharp" src={participant.avatar} sx={{ width: 20, height: 20 }} />
+          ))}
         </AvatarGroup>
       </Stack>
       <ListItem disablePadding>
@@ -106,11 +118,12 @@ const ReminderDetail = ({reminderdetail, startTime, endTime} : ReminderDetailPro
           </ListItemText>
         </ListItemButton>
       </ListItem>
+        {reminderdetail.participants.find((participant: any) => participant._id === session?.user._doc._id) === undefined ?
       <Stack sx={{ marginLeft: "15px", paddingRight: "15px", gap: "8px" }}>
         <Typography sx={{ fontSize: "12px", opacity: "0.8" }}>
           Participating?
         </Typography>
-        <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+          <Stack direction="row" sx={{ justifyContent: "space-between" }}>
           <Button
             variant="contained"
             sx={{
@@ -119,7 +132,8 @@ const ReminderDetail = ({reminderdetail, startTime, endTime} : ReminderDetailPro
               "& .MuiSvgIcon-root": {
                 fontSize: "13px",
               },
-            }}
+              }}
+            onClick={handleParticipate}
             startIcon={<CheckCircleRoundedIcon sx={{ fontSize: "12px" }} />}
           >
             Yes
@@ -137,8 +151,10 @@ const ReminderDetail = ({reminderdetail, startTime, endTime} : ReminderDetailPro
           >
             No
           </Button>
-        </Stack>
+          </Stack>
       </Stack>
+          : null
+        }
     </div>
   );
 };

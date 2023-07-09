@@ -116,7 +116,7 @@ const ReminderCard = ({ reminder }: ReminderCardProps) => {
               },
             }}
           >
-            {reminder.group?.members.map((member: any) => (
+            {reminder.participants.map((member: any) => (
               <Avatar
                 key={member._id}
                 alt="Remy Sharp"
