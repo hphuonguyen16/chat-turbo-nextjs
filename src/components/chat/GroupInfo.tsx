@@ -23,6 +23,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddMember from "./AddMember"
+import Calendar from "@/components/calendar/Calendar"
+import CalendarReminder from "@/components/chat/CalendarReminder"
 
 export type GroupInfoProps = {
   _id: string;
@@ -124,14 +126,14 @@ const GroupInfo = ({
       <Box sx={{ padding: "40px 15px" }}>
         <Snackbar
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
+            vertical: "bottom",
+            horizontal: "right",
           }}
           open={open}
           autoHideDuration={3000}
           onClose={handleCloseSnack}
         >
-          <Alert variant="filled" severity="success" sx={{ width: '100%' }}>
+          <Alert variant="filled" severity="success" sx={{ width: "100%" }}>
             {message}
           </Alert>
         </Snackbar>
@@ -159,20 +161,30 @@ const GroupInfo = ({
               >
                 {groupInfo?.members?.length} members
               </Typography>
-              <Stack direction="row" spacing={2} sx={{
-                padding: "10px 0px"
-              }}>
-                <Fab size="small" color="primary" aria-label="add" onClick={
-                  () => setOpenAddModal(true)
-                }>
+              <Stack
+                direction="row"
+                spacing={2}
+                sx={{
+                  padding: "10px 0px",
+                }}
+              >
+                <Fab
+                  size="small"
+                  color="primary"
+                  aria-label="add"
+                  onClick={() => setOpenAddModal(true)}
+                >
                   <AddIcon />
                 </Fab>
-                <Fab size="small" color="primary" aria-label="edit" onClick={
-                  () => setOpenModal(true)
-                }>
+                <Fab
+                  size="small"
+                  color="primary"
+                  aria-label="edit"
+                  onClick={() => setOpenModal(true)}
+                >
                   <EditIcon />
                 </Fab>
-                <Fab size="small" color="primary" aria-label="photo" >
+                <Fab size="small" color="primary" aria-label="photo">
                   <CldUploadButton
                     options={{ maxFiles: 1 }}
                     onUpload={handleUpload}
@@ -200,27 +212,30 @@ const GroupInfo = ({
                 }
               />
               <Typography variant="h6">
-                {groupInfo
-                  ? groupInfo?.members?.filter(
+                {groupInfo ? (
+                  groupInfo?.members?.filter(
                     (member) => member._id !== session?.user?._doc._id
                   )[0]?.name +
                   " " +
                   groupInfo?.members?.filter(
                     (member) => member._id !== session?.user?._doc._id
                   )[0]?.surname
-                  : <Skeleton variant="text" width="100px" />}
+                ) : (
+                  <Skeleton variant="text" width="100px" />
+                )}
               </Typography>
               <Typography
                 sx={{ opacity: "0.5", fontSize: "14px" }}
                 variant="h6"
               >
-                {groupInfo
-                  ? groupInfo?.members?.filter(
+                {groupInfo ? (
+                  groupInfo?.members?.filter(
                     (member) => member._id !== session?.user?._doc._id
                   )[0]?.quote
-                  : <Skeleton variant="text" width="100px" />}
+                ) : (
+                  <Skeleton variant="text" width="100px" />
+                )}
               </Typography>
-
             </>
           )}
         </Stack>
@@ -427,6 +442,22 @@ const GroupInfo = ({
           }}
         />
       </RootModal>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography variant="h5">Reminders</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack sx={{ width: "100%" }}>
+            <Box>
+              <CalendarReminder groupId = {groupInfo?._id} />
+            </Box>
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
     </>
   );
 };
