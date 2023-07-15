@@ -17,22 +17,21 @@ const getMonthData = (value: Dayjs) => {
 };
 
 const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
-  console.log(value.format("YYYY-MM-DD"), mode);
 };
 interface CalendarProps {
   groupId: string;
 }
 const App = ({groupId} : CalendarProps) => {
   const { token } = theme.useToken();
-  const reminderCurrent = useRef<any>(null);
+  const [reminderCurrent, setReminderCurrent] = useState<any>(null);
   const [value, setValue] = useState(() => dayjs());
   const [selectedValue, setSelectedValue] = useState(() => dayjs());
   const [reminderSelected, setReminderSelected] = useState<any>(null);
 
    const getListData = (value: Dayjs) => {
      let listData: any[] = [];
-     if (!reminderCurrent.current) return listData;
-     reminderCurrent.current.forEach((reminder:any) => {
+     if (!reminderCurrent) return listData;
+     reminderCurrent.forEach((reminder:any) => {
        if (dayjs(reminder.startDateTime).isSame(value, "day")) {
          listData.push(reminder);
        }
@@ -84,8 +83,7 @@ const App = ({groupId} : CalendarProps) => {
         },
       });
       const res = await data.json();
-      console.log(res);
-      reminderCurrent.current = res.reminder;
+      setReminderCurrent(res.reminder);
       const daysToHighlight = res.reminder.map((reminder: any) => {
         //get day of startDateTime in dayjs format
         const day = dayjs(reminder.startDateTime);
@@ -106,8 +104,8 @@ const App = ({groupId} : CalendarProps) => {
   };
 
  useEffect(() => {
-   if (reminderCurrent.current && reminderCurrent.current.length > 0) {
-     const reminder = reminderCurrent.current.map((reminder: any) => {
+   if (reminderCurrent && reminderCurrent.length > 0) {
+     const reminder = reminderCurrent.map((reminder: any) => {
        const day = dayjs(reminder.startDateTime);
        if (day.isSame(value, "day")) {
           return reminder;
@@ -115,10 +113,8 @@ const App = ({groupId} : CalendarProps) => {
      });
      setReminderSelected(reminder);
    }
- }, [value]);
+ }, [reminderCurrent, value]);
   
-  console.log(reminderSelected);
-
 
   return (
     <div>
@@ -134,7 +130,7 @@ const App = ({groupId} : CalendarProps) => {
         {
           reminderSelected && reminderSelected.map((reminder: any) => {
             if (reminder !== undefined) {
-              return <ReminderCard reminder={reminder} />
+              return <ReminderCard key={reminder._id} reminder={reminder} />
             }
           })
         }
